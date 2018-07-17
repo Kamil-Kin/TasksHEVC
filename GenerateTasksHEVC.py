@@ -9,6 +9,7 @@ COMPUTER_NUM = 1   # Liczba komputerow
 MAX_FRAMES = 0
 #===============================================================================
 GEN_ENCODE                          = 1
+GEN_TRANSCODE                       = 1
 GEN_DECODE                          = 0
 # ------------------------------------
 GEN_REN_DEC                         = 0
@@ -89,6 +90,10 @@ CFG_PATH_ENC = "cfg_enc"
 LOG_PATH_ENC = "log_enc"
 TASK_PATH_ENC = "tasks%dof%d_hevc_enc"
 
+CFG_PATH_TRANS = "cfg_trans"
+LOG_PATH_TRANS = "log_trans"
+TASK_PATH_TRANS = "tasks%dof%d_hevc_trans"
+
 LOG_PATH_DEC = "log_dec"
 TASK_PATH_DEC = "tasks%dof%d_hevc_dec"
 
@@ -113,6 +118,15 @@ MB_thread_usage_enc = {
     "F":[1600,1.0]
 }
 
+MB_thread_usage_trans = {#todo
+    "A":[1600,1.0],
+    "B":[1600,1.0],
+    "C":[1600,1.0],
+    "D":[1600,1.0],
+    "E":[1600,1.0],
+    "F":[1600,1.0]
+}
+
 MB_thread_usage_dec = {
     "A":[800,1.0],
     "B":[800,1.0],
@@ -124,11 +138,13 @@ MB_thread_usage_dec = {
 
 #===============================================================================    
 
-FINAL_COMMENTS_ENC = [ "Encoding of HEVC" ]
+FINAL_COMMENTS_ENC   = [ "Encoding of HEVC" ]
 
-FINAL_COMMENTS_DEC = [ "Decoding of HEVC" ]
+FINAL_COMMENTS_TRANS = [ "Transcoding of HEVC" ]
 
-FINAL_COMMENTS_PYT = [ "Pythoing of HEVC" ]
+FINAL_COMMENTS_DEC   = [ "Decoding of HEVC" ]
+
+FINAL_COMMENTS_PYT   = [ "Pythoing of HEVC" ]
 
 #===============================================================================
 
@@ -231,7 +247,7 @@ def create_reconstructed_filename(s, qp):
     TEMPLATE = "..\\..\\%s\\%s_%dx%d_%d_%dbit_QP%02d.yuv"
     return TEMPLATE%(REC_PATH,s2name[s],s2resolution[s][0],s2resolution[s][1],s2framerate[s],s2bitdepth[s],qp)
 
-#===============================================================================
+#===========================ENCODER==============================================
 def create_task_id_name_enc(s,qp):
     #Create task id name form sequence number and qp value
     TASK_ID_NAME_TEMPLATE = "hevc_encoder_%s_%dx%d_%d_%dbit_QP%02d"
@@ -267,7 +283,43 @@ def create_argline_enc(s,qp):
     ARG_LINE_TEMPLATE = "-c %s"
     return ARG_LINE_TEMPLATE%(create_cfg_filename_enc(s, qp))
 
-#===============================================================================
+#===========================TRANSCODER==============================================
+def create_task_id_name_trans(s,qp):
+    #Create task id name form sequence number and qp value
+    TASK_ID_NAME_TEMPLATE = "hevc_transcoder_%s_%dx%d_%d_%dbit_QP%02d"
+    return TASK_ID_NAME_TEMPLATE%(s2name[s],s2resolution[s][0],s2resolution[s][1],s2framerate[s],s2bitdepth[s],qp)
+
+def create_task_filename_trans(task_idcn,task_id_name):
+    #Create task id name form sequence number and qp value
+    TASK_FILENAME_TEMPLATE = "..\\%s\\%s"
+    return (TASK_FILENAME_TEMPLATE%(TASK_PATH_TRANS,task_id_name))%(task_idcn,len(COMPUTER_NUM))
+
+def create_cfg_filename_trans(s, qp):
+    #Create task id name form sequence number and qp value
+    CFG_FILENAME_TEMPLATE = "..\\..\\%s\\%s_QP%02d.cfg"
+    return CFG_FILENAME_TEMPLATE%(CFG_PATH_TRANS,s2name[s],qp)
+
+def create_log_filename_trans(s, qp):
+    #Create task id name form sequence number and qp value
+    LOG_FILENAME_TEMPLATE = "..\\..\\%s\\%s_QP%02d_log.txt"
+    return LOG_FILENAME_TEMPLATE%(LOG_PATH_TRANS,s2name[s],qp)
+
+def create_err_filename_trans(s, qp):
+    #Create task id name form sequence number and qp value
+    LOG_FILENAME_TEMPLATE = "..\\..\\%s\\%s_QP%02d_err.txt"
+    return LOG_FILENAME_TEMPLATE%(LOG_PATH_TRANS,s2name[s],qp)
+
+def create_commandline_trans():
+    #Create task id name form sequence number and qp value
+    COMMAND_LINE_TEMPLATE = "..\\..\\%s\\TAppTranscoder.exe"
+    return COMMAND_LINE_TEMPLATE%(BIN_PATH) 
+
+def create_argline_trans(s,qp):
+    #Create task id name form sequence number and qp value
+    ARG_LINE_TEMPLATE = "-c %s"
+    return ARG_LINE_TEMPLATE%(create_cfg_filename_trans(s, qp))
+
+#===========================DECODER==============================================
 def create_task_id_name_dec(s,qp):
     #Create task id name form sequence number and qp value
     TASK_ID_NAME_TEMPLATE = "hevc_decoder_%s_%dx%d_%d_%dbit_QP%02d"
@@ -353,6 +405,16 @@ def prepare_paths_or_del(remove_or_create):
         ensure_path_or_del(remove_or_create, PATH+"\\"+RUN_PATH)
 
         ensure_path_or_del_computer_num(remove_or_create, PATH+"\\", TASK_PATH_ENC)
+
+    if (GEN_TRANSCODE|GEN_ALL_CFG|remove_or_create):
+
+        ensure_path_or_del(remove_or_create, PATH+"\\"+BIT_PATH)
+        ensure_path_or_del(remove_or_create, PATH+"\\"+CFG_PATH_TRANS)
+        ensure_path_or_del(remove_or_create, PATH+"\\"+LOG_PATH_TRANS)
+        ensure_path_or_del(remove_or_create, PATH+"\\"+REC_PATH)
+        ensure_path_or_del(remove_or_create, PATH+"\\"+RUN_PATH)
+
+        ensure_path_or_del_computer_num(remove_or_create, PATH+"\\", TASK_PATH_TRANS)
 
     if (GEN_DECODE|GEN_ALL_CFG|remove_or_create):
         ensure_path_or_del(remove_or_create, PATH+"\\"+DEC_PATH)
@@ -506,6 +568,8 @@ def prepare_config_pyt(out_config_filename, sequence, qp):
     fp.writelines(config_pyt)
     fp.close()
 
+# def prepare_config_trans() ? todo
+
 def mx_input(str):
     try:
         sys.stdout.write(str)
@@ -523,7 +587,7 @@ print("############################################################")
 print("GENERATING HTM ENCODING/DECODING/RENDERING TASK START")
 print("############################################################")
 
-if (GEN_ANY_PYTHON>1):
+if (GEN_ANY_PYTHON > 1):
     print("Too many options: GEN_ANY_PYTHON")
     exit(0)
 
@@ -556,7 +620,7 @@ for i in range(len(COMPUTER_NUM)):
 
 #test_idx=0
 for s in s2do: #Loop over every sequence to do
-    for qp in range(1,51): #Loop over qp range for given seqence
+    for qp in range(10,51): #Loop over qp range for given seqence
 
         best_i = -1
         best_dif = 0
@@ -582,7 +646,6 @@ for s in s2do: #Loop over every sequence to do
         if (GEN_ANY_PYTHON|GEN_ALL_CFG):
 
             ensure_path(PATH+"\\"+RUN_PATH+"\\"+task_id_name_pyt)
-
             os.chdir(PATH+"\\"+RUN_PATH+"\\"+task_id_name_pyt)
 
         log_filename = create_log_filename_pyt(s,qp)
@@ -593,7 +656,6 @@ for s in s2do: #Loop over every sequence to do
         os.chdir(PATH+"\\"+RUN_PATH+"\\")
         if (GEN_ANY_PYTHON):
             new_task_filename = create_task_filename_pyt(task_idcn,task_id_name_pyt)
-
             generate_task_v2(GEN_SCRIPT_TYPES, new_task_filename, RUN_PATH+"\\"+task_id_name_pyt, [commandline,argline], [log_filename,err_filename],[10,1], USER, sys.argv[0], EMAIL_ENABLE, EMAIL_RECIPIENTS, FINAL_COMMENTS_PYT, last_task_filename)
             last_task_filename = new_task_filename
 
@@ -615,7 +677,6 @@ for s in s2do: #Loop over every sequence to do
         os.chdir(PATH+"\\"+RUN_PATH+"\\")
         if (GEN_DECODE):
             new_task_filename = create_task_filename_dec(task_idcn,task_id_name_dec)
-
             generate_task_v2(GEN_SCRIPT_TYPES, new_task_filename, RUN_PATH+"\\"+task_id_name_dec, [commandline,argline], [log_filename,err_filename],MB_thread_usage_dec[s2class[s]], USER, sys.argv[0], EMAIL_ENABLE, EMAIL_RECIPIENTS, FINAL_COMMENTS_DEC, last_task_filename)
             last_task_filename = new_task_filename
 
@@ -641,6 +702,24 @@ for s in s2do: #Loop over every sequence to do
             generate_task_v2(GEN_SCRIPT_TYPES, new_task_filename, RUN_PATH+"\\"+task_id_name_enc, [commandline,argline], [log_filename,err_filename],MB_thread_usage_enc[s2class[s]], USER, sys.argv[0], EMAIL_ENABLE, EMAIL_RECIPIENTS, FINAL_COMMENTS_ENC, last_task_filename)
             last_task_filename = new_task_filename
 
+#       transcoding
+        task_id_name_trans = create_task_filename_trans(s,qp)
+        if (GEN_TRANSCODE|GEN_ALL_CFG):
+            ensure_path(PATH+"\\"+RUN_PATH+"\\"+task_id_name_trans)
+            os.chdir(PATH+"\\"+RUN_PATH+"\\"+task_id_name_trans)
+
+            #prepare? todo
+        
+        log_filename = create_log_filename_trans(s,qp)
+        err_filename = create_err_filename_trans(s,qp)
+        commandline  = create_commandline_trans()
+        argline      = create_argline_trans(s,qp)
+
+        os.chdir(PATH+"\\"+RUN_PATH+"\\")
+        if (GEN_TRANSCODE):
+            new_task_filename = create_task_filename_trans(task_idcn,task_id_name_trans)
+            generate_task_v2(GEN_SCRIPT_TYPES, new_task_filename, RUN_PATH+"\\"+task_id_name_trans, [commandline,argline], [log_filename,err_filename],MB_thread_usage_trans[s2class[s]], USER, sys.argv[0], EMAIL_ENABLE, EMAIL_RECIPIENTS, FINAL_COMMENTS_TRANS, last_task_filename)
+            last_task_filename = new_task_filename
 
 for i in range(len(COMPUTER_NUM)):
     print("TESTS FOR ", (i+1), ":  ", tests[i]);
