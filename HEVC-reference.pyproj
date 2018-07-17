@@ -1,0 +1,38 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Build">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{0e61f726-0821-4ce1-845e-cabb157f97d3}</ProjectGuid>
+    <ProjectHome />
+    <StartupFile>GenerateTasksHEVC.py</StartupFile>
+    <SearchPath />
+    <WorkingDirectory>.</WorkingDirectory>
+    <OutputPath>.</OutputPath>
+    <ProjectTypeGuids>{888888a0-9f3d-457c-b088-3a5042f75d52}</ProjectTypeGuids>
+    <LaunchProvider>Standard Python launcher</LaunchProvider>
+    <InterpreterId />
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'" />
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'" />
+  <PropertyGroup>
+    <VisualStudioVersion Condition=" '$(VisualStudioVersion)' == '' ">10.0</VisualStudioVersion>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Include="!script\s2bitdepth.py" />
+    <Compile Include="!script\s2class.py" />
+    <Compile Include="!script\s2filename.py" />
+    <Compile Include="!script\s2framerate.py" />
+    <Compile Include="!script\s2frames.py" />
+    <Compile Include="!script\s2name.py" />
+    <Compile Include="!script\s2qp.py" />
+    <Compile Include="!script\s2resolution.py" />
+    <Compile Include="!script\task_generation_v2.py" />
+    <Compile Include="GenerateTasksHEVC.py" />
+    <Compile Include="SummaryToExcel_TG_kbps.py" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="!script" />
+  </ItemGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
+</Project>
