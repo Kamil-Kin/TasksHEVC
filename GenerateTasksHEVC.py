@@ -9,7 +9,6 @@ COMPUTER_NUM = 1   # Liczba komputerow
 MAX_FRAMES = 0
 #===============================================================================
 GEN_ENCODE                          = 1
-GEN_TRANSCODE                       = 1
 GEN_DECODE                          = 0
 # ------------------------------------
 GEN_REN_DEC                         = 0
@@ -89,10 +88,6 @@ DEC_PATH = "dec"
 CFG_PATH_ENC = "cfg_enc"
 LOG_PATH_ENC = "log_enc"
 TASK_PATH_ENC = "tasks%dof%d_hevc_enc"
-
-CFG_PATH_TRANS = "cfg_trans"
-LOG_PATH_TRANS = "log_trans"
-TASK_PATH_TRANS = "tasks%dof%d_hevc_trans"
 
 LOG_PATH_DEC = "log_dec"
 TASK_PATH_DEC = "tasks%dof%d_hevc_dec"
