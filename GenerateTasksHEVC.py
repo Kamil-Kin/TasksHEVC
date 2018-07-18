@@ -10,16 +10,8 @@ MAX_FRAMES = 0
 #===============================================================================
 GEN_ENCODE                          = 1
 GEN_TRANSCODE                       = 1
-GEN_DECODE                          = 0
-# ------------------------------------
-GEN_REN_DEC                         = 0
-GEN_REN_DEC_TESTMISMATCH_MV_DEC     = 0
-GEN_REN_DEC_TESTMISMATCH_RM_DEC     = 0
-GEN_REN_DEC_TESTMISMATCH_RM_DEC_REC = 0
 #===============================================================================
 GEN_ALL_CFG              = 0
-#===============================================================================
-GEN_ANY_PYTHON = GEN_REN_DEC+GEN_REN_DEC_TESTMISMATCH_MV_DEC+GEN_REN_DEC_TESTMISMATCH_RM_DEC+GEN_REN_DEC_TESTMISMATCH_RM_DEC_REC
 #===============================================================================
 GEN_SCRIPT_TYPES = ["tsk","bat","sh"] # skrypty taskow do wygenerowania
 #GEN_SCRIPT_TYPES = ["tsk"] # skrypty taskow do wygenerowania
@@ -94,16 +86,9 @@ CFG_PATH_TRANS = "cfg_trans"
 LOG_PATH_TRANS = "log_trans"
 TASK_PATH_TRANS = "tasks%dof%d_hevc_trans"
 
-LOG_PATH_DEC = "log_dec"
-TASK_PATH_DEC = "tasks%dof%d_hevc_dec"
-
-DEC_OK_PATH = "dec_ok"
-DEC_WRONG_PATH = "dec_wrong"
-TASK_PATH_PYT = "tasks%dof%d_hevc_python"
-CFG_PATH_PYT = "cfg_pyt"
-LOG_PATH_PYT = "log_pyt"
-
 CFG_TEMPLATE_FILENAME_ENC = BASE_CONFIG_PATH+"\\encoder_randomaccess_main.cfg"
+
+CFG_TEMPLATE_FILENAME_TRANS = BASE_CONFIG_PATH+"\\config_transcoder.cfg"
 
 SEQ_PATH = "..\\seq"
 
@@ -127,24 +112,11 @@ MB_thread_usage_trans = {#todo
     "F":[1600,1.0]
 }
 
-MB_thread_usage_dec = {
-    "A":[800,1.0],
-    "B":[800,1.0],
-    "C":[800,1.0],
-    "D":[800,1.0],
-    "E":[800,1.0],
-    "F":[800,1.0]
-}
-
 #===============================================================================    
 
 FINAL_COMMENTS_ENC   = [ "Encoding of HEVC" ]
 
 FINAL_COMMENTS_TRANS = [ "Transcoding of HEVC" ]
-
-FINAL_COMMENTS_DEC   = [ "Decoding of HEVC" ]
-
-FINAL_COMMENTS_PYT   = [ "Pythoing of HEVC" ]
 
 #===============================================================================
 
@@ -311,75 +283,13 @@ def create_err_filename_trans(s, qp):
 
 def create_commandline_trans():
     #Create task id name form sequence number and qp value
-    COMMAND_LINE_TEMPLATE = "..\\..\\%s\\TAppTranscoder.exe"
+    COMMAND_LINE_TEMPLATE = "..\\..\\%s\\HEVC_transcoder_x64_Debug.exe" # release better
     return COMMAND_LINE_TEMPLATE%(BIN_PATH) 
 
 def create_argline_trans(s,qp):
     #Create task id name form sequence number and qp value
     ARG_LINE_TEMPLATE = "-c %s"
     return ARG_LINE_TEMPLATE%(create_cfg_filename_trans(s, qp))
-
-#===========================DECODER==============================================
-def create_task_id_name_dec(s,qp):
-    #Create task id name form sequence number and qp value
-    TASK_ID_NAME_TEMPLATE = "hevc_decoder_%s_%dx%d_%d_%dbit_QP%02d"
-    return TASK_ID_NAME_TEMPLATE%(s2name[s],s2resolution[s][0],s2resolution[s][1],s2framerate[s],s2bitdepth[s],qp)
-
-def create_task_filename_dec(task_idcn,task_id_name):
-    #Create task id name form sequence number and qp value
-    TASK_FILENAME_TEMPLATE = "..\\%s\\%s"
-    return (TASK_FILENAME_TEMPLATE%(TASK_PATH_DEC,task_id_name))%(task_idcn,len(COMPUTER_NUM))   
-
-def create_log_filename_dec(s, qp):
-    #Create task id name form sequence number and qp value
-    LOG_FILENAME_TEMPLATE = "..\\..\\%s\\%s_QP%02d_log.txt"
-    return LOG_FILENAME_TEMPLATE%(LOG_PATH_DEC,s2name[s],qp)
-
-def create_err_filename_dec(s, qp):
-    #Create task id name form sequence number and qp value
-    LOG_FILENAME_TEMPLATE = "..\\..\\%s\\%s_QP%02d_err.txt"
-    return LOG_FILENAME_TEMPLATE%(LOG_PATH_DEC,s2name[s],qp)
-
-def create_commandline_dec():
-    #Create task id name form sequence number and qp value
-    COMMAND_LINE_TEMPLATE = "..\\..\\%s\\TAppDecoder.exe"
-    return COMMAND_LINE_TEMPLATE%(BIN_PATH) 
-
-def create_argline_dec(s,qp):
-    #Create task id name form sequence number and qp value
-    ARG_LINE_TEMPLATE = "-b %s -o %s "
-    return ARG_LINE_TEMPLATE%(create_bitstream_filename(s, qp),create_decoded_filename(s,qp))
-
-#===============================================================================
-
-def create_task_id_name_pyt(s,qp):
-    #Create task id name form sequence number and qp value
-    TASK_ID_NAME_TEMPLATE = "hevc_python_%s_00_%dx%d_%d_%dbit_QP%02d"
-    return TASK_ID_NAME_TEMPLATE%(s2name[s],s2resolution[s][0],s2resolution[s][1],s2framerate[s],s2bitdepth[s],qp)
-
-def create_task_filename_pyt(task_idcn,task_id_name):
-    #Create task id name form sequence number and qp value
-    TASK_FILENAME_TEMPLATE = "..\\%s\\%s"
-    return (TASK_FILENAME_TEMPLATE%(TASK_PATH_PYT,task_id_name))%(task_idcn,len(COMPUTER_NUM))
-
-def create_cfg_filename_pyt(s, qp):
-    #Create task id name form sequence number and qp value
-    CFG_FILENAME_TEMPLATE = "..\\..\\%s\\%s_QP%02d.py"
-    return CFG_FILENAME_TEMPLATE%(CFG_PATH_PYT,s2name[s],qp)
-
-def create_log_filename_pyt(s, qp):
-    #Create task id name form sequence number and qp value
-    LOG_FILENAME_TEMPLATE = "..\\..\\%s\\%s_QP%02d_log.txt"
-    return LOG_FILENAME_TEMPLATE%(LOG_PATH_PYT,s2name[s],qp)
-    
-def create_err_filename_pyt(s, qp):
-    #Create task id name form sequence number and qp value
-    LOG_FILENAME_TEMPLATE = "..\\..\\%s\\%s_QP%02d_err.txt"
-    return LOG_FILENAME_TEMPLATE%(LOG_PATH_PYT,s2name[s],qp)
-    
-def create_argline_pyt(s,qp):
-    #Create task id name form sequence number and qp value
-    return "-x"
 
 #===============================================================================    
 
@@ -392,9 +302,6 @@ def prepare_paths_or_del(remove_or_create):
     #global RUN_PATH
     #global REC_PATH
     #global TASK_PATH_ENC
-
-    #global LOG_PATH_DEC
-    #global TASK_PATH_DEC
 
     if (GEN_ENCODE|GEN_ALL_CFG|remove_or_create):
 
@@ -415,21 +322,6 @@ def prepare_paths_or_del(remove_or_create):
         ensure_path_or_del(remove_or_create, PATH+"\\"+RUN_PATH)
 
         ensure_path_or_del_computer_num(remove_or_create, PATH+"\\", TASK_PATH_TRANS)
-
-    if (GEN_DECODE|GEN_ALL_CFG|remove_or_create):
-        ensure_path_or_del(remove_or_create, PATH+"\\"+DEC_PATH)
-        ensure_path_or_del(remove_or_create, PATH+"\\"+RUN_PATH)
-        ensure_path_or_del(remove_or_create, PATH+"\\"+LOG_PATH_DEC)
-
-        ensure_path_or_del_computer_num(remove_or_create, PATH+"\\", TASK_PATH_DEC)
-
-    if (GEN_ANY_PYTHON|GEN_ALL_CFG|remove_or_create):
-        ensure_path_or_del(remove_or_create, PATH+"\\"+DEC_OK_PATH)
-        ensure_path_or_del(remove_or_create, PATH+"\\"+DEC_WRONG_PATH)
-        ensure_path_or_del(remove_or_create, PATH+"\\"+CFG_PATH_PYT)
-        ensure_path_or_del(remove_or_create, PATH+"\\"+LOG_PATH_PYT)
-
-        ensure_path_or_del_computer_num(remove_or_create, PATH+"\\", TASK_PATH_PYT)
 
     return
 #===============================================================================
@@ -463,8 +355,8 @@ def prepare_config_enc(s,qp):
     config = ref_cfg_file.readlines()
     ref_cfg_file.close()
 
-    config = modify_parameter(config,"InputFile",create_video_filename(s))
-    config = modify_parameter(config,"ReconFile",create_reconstructed_filename(s, qp))
+    config = modify_parameter(config, "InputFile", create_video_filename(s))
+    config = modify_parameter(config, "ReconFile", create_reconstructed_filename(s, qp))
     config = modify_parameter(config, "BitstreamFile", create_bitstream_filename(s,qp))
 
     config = modify_parameter(config, "InputBitDepth", str(s2bitdepth[s]))
@@ -490,91 +382,25 @@ def prepare_config_enc(s,qp):
 
     return cfg_filename
 
-def prepare_config_pyt(out_config_filename, sequence, qp):
+def prepare_config_trans():
+    ref_cfg_file = open("..\\..\\"+CFG_TEMPLATE_FILENAME_TRANS,'r')
+    config = ref_cfg_file.readlines()
+    ref_cfg_file.close()
 
-    mysep = os.sep
-    mysep = mysep.replace('\\', '\\\\')
+    #modify_parameter
 
-    config_pyt = []
-    config_pyt.append("# -*- coding: utf8 -*-\n")
-    config_pyt.append("import sys\n")
-    config_pyt.append("import os\n")
-    config_pyt.append("import shutil\n")
-    config_pyt.append("import getpass\n")
-    config_pyt.append("\n")
-    config_pyt.append("PATH = sys.argv[0]\n")
-    config_pyt.append("PATH = os.path.dirname(PATH)\n")
-    config_pyt.append("PATH = os.path.abspath(PATH)\n")
-    config_pyt.append("\n")
-    config_pyt.append('REC="..'+mysep+'..'+mysep+REC_PATH+mysep+'"\n')
-    config_pyt.append('DEC="..'+mysep+'..'+mysep+DEC_PATH+mysep+'"\n')
-    config_pyt.append('DEC_OK="..'+mysep+'..'+mysep+DEC_OK_PATH+mysep+'"\n')
-    config_pyt.append('DEC_WRONG="..'+mysep+'..'+mysep+DEC_WRONG_PATH+mysep+'"\n')
-    config_pyt.append("\n")
-    config_pyt.append("def file_cmp(f1, f2):\n")
-    config_pyt.append("    bufsize = 1024*1024\n")
-    config_pyt.append("    with open(f1, 'rb') as fp1, open(f2, 'rb') as fp2:\n")
-    config_pyt.append("        while True:\n")
-    config_pyt.append("            b1 = fp1.read(bufsize)\n")
-    config_pyt.append("            b2 = fp2.read(bufsize)\n")
-    config_pyt.append("            if b1 != b2:\n")
-    config_pyt.append("                return False\n")
-    config_pyt.append("            if not b1:\n")
-    config_pyt.append("                return True\n")
-    config_pyt.append("\n")
-    config_pyt.append("def zero_file(filename):\n")
-    config_pyt.append("    fp = open(filename,'w')\n")
-    config_pyt.append("    fp.close()\n")
-    config_pyt.append("\n")
-    config_pyt.append("def rename_dec_file(dst, src):\n")
-    config_pyt.append("    if os.path.isfile(src):\n")
-    config_pyt.append("        shutil.move(src, dst)\n")
+    cfg_filename = create_cfg_filename_trans(s, qp)
+    cfg = open(cfg_filename,'w')
+    cfg.writelines(config)
+    cfg.close()
 
-    config_pyt.append("\n")
-    config_pyt.append("def compare_files(file_name1,file_name2):\n")
-    config_pyt.append("    frec = file_name1\n")
-    config_pyt.append("    fdec = file_name2\n")
-    config_pyt.append("    file_name=os.path.basename(file_name2)\n")
-    config_pyt.append("    if os.path.isfile(frec):\n")
-    config_pyt.append("        if os.path.isfile(fdec):\n")
-    if (GEN_REN_DEC_TESTMISMATCH_MV_DEC):
-        config_pyt.append("            if (file_cmp(frec,fdec)):\n")
-        config_pyt.append("                print('OK  '+file_name+' - MOVING TO DEC_OK')\n")
-        config_pyt.append("                shutil.move(fdec, DEC_OK+file_name)\n")
-        config_pyt.append("            else:\n")    
-        config_pyt.append("                print('BAD '+file_name+' - MOVING TO DEC_WRONG')\n")
-        config_pyt.append("                shutil.move(fdec, DEC_WRONG+file_name)\n")
-    elif (GEN_REN_DEC_TESTMISMATCH_RM_DEC|GEN_REN_DEC_TESTMISMATCH_RM_DEC_REC):
-        config_pyt.append("            if (file_cmp(frec,fdec)):\n")
-        config_pyt.append("                print('OK  '+file_name+' - TOUCHING IN DEC_OK')\n")
-        config_pyt.append("                os.remove(fdec)\n")
-        config_pyt.append("                zero_file(DEC_OK+file_name)\n")
-        if (GEN_REN_DEC_TESTMISMATCH_RM_DEC_REC):
-            config_pyt.append("                os.remove(frec)\n")
-        config_pyt.append("            else:\n")
-        config_pyt.append("                print('BAD '+file_name+' - MOVING TO DEC_WRONG')\n")
-        config_pyt.append("                shutil.move(fdec, DEC_WRONG+file_name)\n")
-    else:
-        config_pyt.append("            print('')\n")
-
-    config_pyt.append("\n")
-
-    #name = create_decoded_filename(s,qp).replace('/',os.sep).replace('\\',os.sep).replace('\\', '\\\\')
-    #config_pyt.append('rename_dec_file("'+create_reconstructed_filename(s, qp)+'","'+name+'")\n')
-
-    config_pyt.append('compare_files("'+create_reconstructed_filename(s, qp).replace('/',os.sep).replace('\\',os.sep).replace('\\', '\\\\')+'","'+create_decoded_filename(s,qp).replace('/',os.sep).replace('\\',os.sep).replace('\\', '\\\\')+'")\n')
-
-    fp = open(out_config_filename,'wt')
-    fp.writelines(config_pyt)
-    fp.close()
-
-# def prepare_config_trans() ? todo
+    return cfg_filename
 
 def mx_input(str):
     try:
         sys.stdout.write(str)
         sys.stdout.flush()
-        res = sys.stdin.readline()  
+        res = sys.stdin.readline()
     except:
         return "-"
     return res
@@ -586,10 +412,6 @@ def mx_input(str):
 print("############################################################")
 print("GENERATING HTM ENCODING/DECODING/RENDERING TASK START")
 print("############################################################")
-
-if (GEN_ANY_PYTHON > 1):
-    print("Too many options: GEN_ANY_PYTHON")
-    exit(0)
 
 confirm = mx_input("press any key to start (or type 'clear' to clear directory and exit)? ")
 
@@ -640,52 +462,9 @@ for s in s2do: #Loop over every sequence to do
         print("  HTM GEN("+str(task_idcn)+"/"+str(len(COMPUTER_NUM)) + ")   "+s2name[s]+" QP:"+str(qp) )
         last_task_filename = ""
 
-#       python
-        task_id_name_pyt = create_task_id_name_pyt(s,qp)
-
-        if (GEN_ANY_PYTHON|GEN_ALL_CFG):
-
-            ensure_path(PATH+"\\"+RUN_PATH+"\\"+task_id_name_pyt)
-            os.chdir(PATH+"\\"+RUN_PATH+"\\"+task_id_name_pyt)
-
-        log_filename = create_log_filename_pyt(s,qp)
-        err_filename = create_err_filename_pyt(s,qp)
-        commandline  = create_cfg_filename_pyt(s,qp)
-        argline      = create_argline_pyt(s,qp)
-
-        os.chdir(PATH+"\\"+RUN_PATH+"\\")
-        if (GEN_ANY_PYTHON):
-            new_task_filename = create_task_filename_pyt(task_idcn,task_id_name_pyt)
-            generate_task_v2(GEN_SCRIPT_TYPES, new_task_filename, RUN_PATH+"\\"+task_id_name_pyt, [commandline,argline], [log_filename,err_filename],[10,1], USER, sys.argv[0], EMAIL_ENABLE, EMAIL_RECIPIENTS, FINAL_COMMENTS_PYT, last_task_filename)
-            last_task_filename = new_task_filename
-
-#       decoding
-        task_id_name_dec = create_task_id_name_dec(s,qp)
-
-        if (GEN_DECODE|GEN_ALL_CFG):
-
-            ensure_path(PATH+"\\"+RUN_PATH+"\\"+task_id_name_dec)
-            os.chdir(PATH+"\\"+RUN_PATH+"\\"+task_id_name_dec)
-
-            prepare_config_pyt( create_cfg_filename_pyt(s,qp), s, qp)
-
-        log_filename = create_log_filename_dec(s,qp)
-        err_filename = create_err_filename_dec(s,qp)
-        commandline  = create_commandline_dec()
-        argline      = create_argline_dec(s,qp)
-
-        os.chdir(PATH+"\\"+RUN_PATH+"\\")
-        if (GEN_DECODE):
-            new_task_filename = create_task_filename_dec(task_idcn,task_id_name_dec)
-            generate_task_v2(GEN_SCRIPT_TYPES, new_task_filename, RUN_PATH+"\\"+task_id_name_dec, [commandline,argline], [log_filename,err_filename],MB_thread_usage_dec[s2class[s]], USER, sys.argv[0], EMAIL_ENABLE, EMAIL_RECIPIENTS, FINAL_COMMENTS_DEC, last_task_filename)
-            last_task_filename = new_task_filename
-
-
 #       encoding
         task_id_name_enc = create_task_id_name_enc(s,qp)
-
         if (GEN_ENCODE|GEN_ALL_CFG):
-
             ensure_path(PATH+"\\"+RUN_PATH+"\\"+task_id_name_enc)
             os.chdir(PATH+"\\"+RUN_PATH+"\\"+task_id_name_enc)
 
@@ -708,8 +487,8 @@ for s in s2do: #Loop over every sequence to do
             ensure_path(PATH+"\\"+RUN_PATH+"\\"+task_id_name_trans)
             os.chdir(PATH+"\\"+RUN_PATH+"\\"+task_id_name_trans)
 
-            #prepare? todo
-        
+            prepare_config_trans()  # todo
+
         log_filename = create_log_filename_trans(s,qp)
         err_filename = create_err_filename_trans(s,qp)
         commandline  = create_commandline_trans()
