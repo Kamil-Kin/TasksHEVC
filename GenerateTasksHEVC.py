@@ -76,17 +76,16 @@ BIN_PATH = "!bin"
 BIT_PATH = "bit"
 RUN_PATH = "run"
 REC_PATH = "rec"
-DEC_PATH = "dec"
 
 CFG_PATH_ENC = "cfg_enc"
 LOG_PATH_ENC = "log_enc"
 TASK_PATH_ENC = "tasks%dof%d_hevc_enc"
 
+CFG_TEMPLATE_FILENAME_ENC = BASE_CONFIG_PATH+"\\encoder_randomaccess_main.cfg"
+
 CFG_PATH_TRANS = "cfg_trans"
 LOG_PATH_TRANS = "log_trans"
 TASK_PATH_TRANS = "tasks%dof%d_hevc_trans"
-
-CFG_TEMPLATE_FILENAME_ENC = BASE_CONFIG_PATH+"\\encoder_randomaccess_main.cfg"
 
 CFG_TEMPLATE_FILENAME_TRANS = BASE_CONFIG_PATH+"\\config_transcoder.cfg"
 
@@ -206,10 +205,6 @@ def ensure_path_or_del_computer_num(remove_or_create, path, template):
 def create_bitstream_filename(s,qp):
     BITSTREAM_FILENAME_TEMPLATE = "..\\..\\%s\\%s_%dx%d_%d_%dbit_bin_QP%02d.bin"
     return BITSTREAM_FILENAME_TEMPLATE%(BIT_PATH,s2name[s],s2resolution[s][0],s2resolution[s][1],s2framerate[s],s2bitdepth[s],qp)
-
-def create_decoded_filename(s,qp):
-    DECODED_FILENAME_TEMPLATE = "..\\..\\%s\\%s_%dx%d_%d_%dbit_QP%02d.yuv"
-    return DECODED_FILENAME_TEMPLATE%(DEC_PATH,s2name[s],s2resolution[s][0],s2resolution[s][1],s2framerate[s],s2bitdepth[s],qp)
 
 def create_video_filename(s):
     TEMPLATE = "..\\..\\%s\\%s\\%s_%dx%d_%d_%dbit.yuv"
@@ -381,6 +376,7 @@ def prepare_config_enc(s,qp):
     cfg.close()
 
     return cfg_filename
+#===============================================================================
 
 def prepare_config_trans():
     ref_cfg_file = open("..\\..\\"+CFG_TEMPLATE_FILENAME_TRANS,'r')
