@@ -8,7 +8,7 @@ COMPUTER_NUM = 1   # Liczba komputerow
 #===============================================================================
 MAX_FRAMES = 0
 #===============================================================================
-GEN_ENCODE                          = 1
+GEN_ENCODE                          = 0
 GEN_TRANSCODE                       = 1
 #===============================================================================
 GEN_ALL_CFG              = 0
@@ -207,8 +207,8 @@ def create_bitstream_filename(s,qp):
     return BITSTREAM_FILENAME_TEMPLATE%(BIT_PATH,s2name[s],s2resolution[s][0],s2resolution[s][1],s2framerate[s],s2bitdepth[s],qp)
 
 def create_output_bitstream_filename(s,qp):
-    OUTPUT_BITSTREAM_FILENAME_TEMPLATE = "..\\..\\%s\\%s_%dx%d_%d_%dbit_bin_QP%02d_out.bin" #todo
-    return OUTPUT_BITSTREAM_FILENAME_TEMPLATE%(SEQ_PATH,s2name[s],s2resolution[s][0],s2resolution[s][1],s2framerate[s],s2bitdepth[s],qp)
+    OUTPUT_BITSTREAM_FILENAME_TEMPLATE = "..\\..\\%s\\%s_%dx%d_%d_%dbit_bin_QP%02d_out.bin"
+    return OUTPUT_BITSTREAM_FILENAME_TEMPLATE%(BIN_PATH,s2name[s],s2resolution[s][0],s2resolution[s][1],s2framerate[s],s2bitdepth[s],qp)
 
 def create_video_filename(s):
     TEMPLATE = "..\\..\\%s\\%s\\%s_%dx%d_%d_%dbit.yuv"
@@ -247,7 +247,7 @@ def create_err_filename_enc(s, qp):
 def create_commandline_enc():
     #Create task id name form sequence number and qp value
     COMMAND_LINE_TEMPLATE = "..\\..\\%s\\TAppEncoder.exe"
-    return COMMAND_LINE_TEMPLATE%(BIN_PATH) 
+    return COMMAND_LINE_TEMPLATE%(BIN_PATH)
 
 def create_argline_enc(s,qp):
     #Create task id name form sequence number and qp value
@@ -356,7 +356,7 @@ def prepare_config_enc(s,qp):
     config = modify_parameter(config, "InputFile", create_video_filename(s))
     config = modify_parameter(config, "ReconFile", create_reconstructed_filename(s, qp))
     config = modify_parameter(config, "BitstreamFile", create_bitstream_filename(s,qp))
-    # todo
+
     config = modify_parameter(config, "InputBitDepth", str(s2bitdepth[s]))
     config = modify_parameter(config, "OutputBitDepth", str(s2bitdepth[s]))
 
@@ -396,7 +396,7 @@ def prepare_config_trans():
     config = modify_parameter(config, "SourceHeight", str(s2resolution[s][1]))
 
     config = modify_parameter(config, "FrameRate", str(s2framerate[s]))
-    
+
     if (MAX_FRAMES<=0):
         frames = s2frames[s]
     else:
@@ -440,7 +440,7 @@ if ("clear" in confirm):
 
 mx_input("press any key to start (confirm)")
 
-prepare_paths_or_del(0) #Create necesary paths 
+prepare_paths_or_del(0) #Create necesary paths
 
 #experiment_seed = PATH.replace('/','\\').rpartition('\\')
 experiment_seed = os.path.basename(PATH)
@@ -503,7 +503,7 @@ for s in s2do: #Loop over every sequence to do
             ensure_path(PATH+"\\"+RUN_PATH+"\\"+task_id_name_trans)
             os.chdir(PATH+"\\"+RUN_PATH+"\\"+task_id_name_trans)
 
-            prepare_config_trans()  # todo
+            prepare_config_trans(s,qp)
 
         log_filename = create_log_filename_trans(s,qp)
         err_filename = create_err_filename_trans(s,qp)
