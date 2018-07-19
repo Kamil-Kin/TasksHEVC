@@ -208,7 +208,7 @@ def create_bitstream_filename(s,qp):
 
 def create_output_bitstream_filename(s,qp):
     OUTPUT_BITSTREAM_FILENAME_TEMPLATE = "..\\..\\%s\\%s_%dx%d_%d_%dbit_bin_QP%02d_out.bin"
-    return OUTPUT_BITSTREAM_FILENAME_TEMPLATE%(BIN_PATH,s2name[s],s2resolution[s][0],s2resolution[s][1],s2framerate[s],s2bitdepth[s],qp)
+    return OUTPUT_BITSTREAM_FILENAME_TEMPLATE%(BIT_PATH,s2name[s],s2resolution[s][0],s2resolution[s][1],s2framerate[s],s2bitdepth[s],qp)
 
 def create_video_filename(s):
     TEMPLATE = "..\\..\\%s\\%s\\%s_%dx%d_%d_%dbit.yuv"
