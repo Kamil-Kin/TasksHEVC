@@ -386,8 +386,8 @@ def prepare_config_trans(s,qp):
     config = ref_cfg_file.readlines()
     ref_cfg_file.close()
 
-    config = modify_parameter(config, "InputFile", create_bitstream_filename(s))
-    config = modify_parameter(config, "OutputFile", create_output_bitstream_filename(s))
+    config = modify_parameter(config, "InputBitstreamFile", create_bitstream_filename(s,qp))
+    config = modify_parameter(config, "OutputBitstreamFile", create_output_bitstream_filename(s,qp))
 
     config = modify_parameter(config, "InputBitDepth", str(s2bitdepth[s]))
     config = modify_parameter(config, "OutputBitDepth", str(s2bitdepth[s]))
@@ -458,7 +458,7 @@ for i in range(len(COMPUTER_NUM)):
 
 #test_idx=0
 for s in s2do: #Loop over every sequence to do
-    for qp in range(10,51): #Loop over qp range for given seqence
+    for qp in range(10,52): #Loop over qp range for given seqence
 
         best_i = -1
         best_dif = 0
@@ -498,7 +498,7 @@ for s in s2do: #Loop over every sequence to do
             last_task_filename = new_task_filename
 
 #       transcoding
-        task_id_name_trans = create_task_filename_trans(s,qp)
+        task_id_name_trans = create_task_id_name_trans(s,qp)
         if (GEN_TRANSCODE|GEN_ALL_CFG):
             ensure_path(PATH+"\\"+RUN_PATH+"\\"+task_id_name_trans)
             os.chdir(PATH+"\\"+RUN_PATH+"\\"+task_id_name_trans)

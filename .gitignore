@@ -5,3 +5,6 @@
 /run
 /tasks1of1_hevc_enc
 /.vs
+/cfg_trans
+/log_trans
+/tasks1of1_hevc_trans
