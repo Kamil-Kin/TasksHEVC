@@ -206,6 +206,10 @@ def create_bitstream_filename(s,qp):
     BITSTREAM_FILENAME_TEMPLATE = "..\\..\\%s\\%s_%dx%d_%d_%dbit_bin_QP%02d.bin"
     return BITSTREAM_FILENAME_TEMPLATE%(BIT_PATH,s2name[s],s2resolution[s][0],s2resolution[s][1],s2framerate[s],s2bitdepth[s],qp)
 
+def create_output_bitstream_filename(s,qp):
+    OUTPUT_BITSTREAM_FILENAME_TEMPLATE = "..\\..\\%s\\%s_%dx%d_%d_%dbit_bin_QP%02d_out.bin" #todo
+    return OUTPUT_BITSTREAM_FILENAME_TEMPLATE%(SEQ_PATH,s2name[s],s2resolution[s][0],s2resolution[s][1],s2framerate[s],s2bitdepth[s],qp)
+
 def create_video_filename(s):
     TEMPLATE = "..\\..\\%s\\%s\\%s_%dx%d_%d_%dbit.yuv"
     return TEMPLATE%(SEQ_PATH,s2class[s],s2name[s],s2resolution[s][0],s2resolution[s][1],s2framerate[s],s2bitdepth[s])
@@ -313,7 +317,6 @@ def prepare_paths_or_del(remove_or_create):
         ensure_path_or_del(remove_or_create, PATH+"\\"+BIT_PATH)
         ensure_path_or_del(remove_or_create, PATH+"\\"+CFG_PATH_TRANS)
         ensure_path_or_del(remove_or_create, PATH+"\\"+LOG_PATH_TRANS)
-        ensure_path_or_del(remove_or_create, PATH+"\\"+REC_PATH)
         ensure_path_or_del(remove_or_create, PATH+"\\"+RUN_PATH)
 
         ensure_path_or_del_computer_num(remove_or_create, PATH+"\\", TASK_PATH_TRANS)
@@ -353,7 +356,7 @@ def prepare_config_enc(s,qp):
     config = modify_parameter(config, "InputFile", create_video_filename(s))
     config = modify_parameter(config, "ReconFile", create_reconstructed_filename(s, qp))
     config = modify_parameter(config, "BitstreamFile", create_bitstream_filename(s,qp))
-
+    # todo
     config = modify_parameter(config, "InputBitDepth", str(s2bitdepth[s]))
     config = modify_parameter(config, "OutputBitDepth", str(s2bitdepth[s]))
 
@@ -383,7 +386,24 @@ def prepare_config_trans():
     config = ref_cfg_file.readlines()
     ref_cfg_file.close()
 
-    #modify_parameter
+    config = modify_parameter(config, "InputFile", create_bitstream_filename(s))
+    config = modify_parameter(config, "OutputFile", create_output_bitstream_filename(s))
+
+    config = modify_parameter(config, "InputBitDepth", str(s2bitdepth[s]))
+    config = modify_parameter(config, "OutputBitDepth", str(s2bitdepth[s]))
+
+    config = modify_parameter(config, "SourceWidth", str(s2resolution[s][0]))
+    config = modify_parameter(config, "SourceHeight", str(s2resolution[s][1]))
+
+    config = modify_parameter(config, "FrameRate", str(s2framerate[s]))
+    
+    if (MAX_FRAMES<=0):
+        frames = s2frames[s]
+    else:
+        frames = min(MAX_FRAMES, s2frames[s])
+    config = modify_parameter(config, "FramesToBeEncoded", str(frames))
+
+    config = modify_parameter(config, "QP", str(qp))
 
     cfg_filename = create_cfg_filename_trans(s, qp)
     cfg = open(cfg_filename,'w')
