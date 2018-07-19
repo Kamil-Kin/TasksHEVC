@@ -91,7 +91,7 @@ CFG_TEMPLATE_FILENAME_TRANS = BASE_CONFIG_PATH+"\\config_transcoder.cfg"
 
 SEQ_PATH = "..\\seq"
 
-#===============================================================================    
+#===============================================================================
 
 MB_thread_usage_enc = {
     "A":[1600,1.0],
@@ -111,7 +111,7 @@ MB_thread_usage_trans = {#todo
     "F":[1600,1.0]
 }
 
-#===============================================================================    
+#===============================================================================
 
 FINAL_COMMENTS_ENC   = [ "Encoding of HEVC" ]
 
@@ -218,7 +218,7 @@ def create_reconstructed_filename(s, qp):
     TEMPLATE = "..\\..\\%s\\%s_%dx%d_%d_%dbit_QP%02d.yuv"
     return TEMPLATE%(REC_PATH,s2name[s],s2resolution[s][0],s2resolution[s][1],s2framerate[s],s2bitdepth[s],qp)
 
-#===========================ENCODER==============================================
+#===========================ENCODER=============================================
 def create_task_id_name_enc(s,qp):
     #Create task id name form sequence number and qp value
     TASK_ID_NAME_TEMPLATE = "hevc_encoder_%s_%dx%d_%d_%dbit_QP%02d"
@@ -254,7 +254,7 @@ def create_argline_enc(s,qp):
     ARG_LINE_TEMPLATE = "-c %s"
     return ARG_LINE_TEMPLATE%(create_cfg_filename_enc(s, qp))
 
-#===========================TRANSCODER==============================================
+#===========================TRANSCODER==========================================
 def create_task_id_name_trans(s,qp):
     #Create task id name form sequence number and qp value
     TASK_ID_NAME_TEMPLATE = "hevc_transcoder_%s_%dx%d_%d_%dbit_QP%02d"
@@ -282,15 +282,15 @@ def create_err_filename_trans(s, qp):
 
 def create_commandline_trans():
     #Create task id name form sequence number and qp value
-    COMMAND_LINE_TEMPLATE = "..\\..\\%s\\HEVC_transcoder_x64_Debug.exe" # release better
-    return COMMAND_LINE_TEMPLATE%(BIN_PATH) 
+    COMMAND_LINE_TEMPLATE = "..\\..\\%s\\HEVC_transcoder_x64_Debug.exe" # release better todo
+    return COMMAND_LINE_TEMPLATE%(BIN_PATH)
 
 def create_argline_trans(s,qp):
     #Create task id name form sequence number and qp value
     ARG_LINE_TEMPLATE = "-c %s"
     return ARG_LINE_TEMPLATE%(create_cfg_filename_trans(s, qp))
 
-#===============================================================================    
+#===============================================================================
 
 def prepare_paths_or_del(remove_or_create):
     #global PATH
@@ -381,7 +381,7 @@ def prepare_config_enc(s,qp):
     return cfg_filename
 #===============================================================================
 
-def prepare_config_trans():
+def prepare_config_trans(s,qp):
     ref_cfg_file = open("..\\..\\"+CFG_TEMPLATE_FILENAME_TRANS,'r')
     config = ref_cfg_file.readlines()
     ref_cfg_file.close()
