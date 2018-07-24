@@ -87,7 +87,8 @@ CFG_PATH_TRANS = "cfg_trans"
 LOG_PATH_TRANS = "log_trans"
 TASK_PATH_TRANS = "tasks%dof%d_hevc_trans"
 
-CFG_TEMPLATE_FILENAME_TRANS = BASE_CONFIG_PATH+"\\config_transcoder.cfg"
+# CFG_TEMPLATE_FILENAME_TRANS = BASE_CONFIG_PATH+"\\config_transcoder.cfg"
+CFG_TEMPLATE_FILENAME_TRANS = BASE_CONFIG_PATH+"\\config_rewriter.cfg"
 
 SEQ_PATH = "..\\seq"
 
@@ -282,7 +283,8 @@ def create_err_filename_trans(s, qp):
 
 def create_commandline_trans():
     #Create task id name form sequence number and qp value
-    COMMAND_LINE_TEMPLATE = "..\\..\\%s\\HEVC_transcoder_x64_Debug.exe" # release better todo
+    # COMMAND_LINE_TEMPLATE = "..\\..\\%s\\HEVC_transcoder_x64_Debug.exe" # release better
+    COMMAND_LINE_TEMPLATE = "..\\..\\%s\\HEVC_rewriter_x64_Release.exe"
     return COMMAND_LINE_TEMPLATE%(BIN_PATH)
 
 def create_argline_trans(s,qp):
