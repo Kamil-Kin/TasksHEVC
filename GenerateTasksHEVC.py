@@ -83,20 +83,10 @@ TASK_PATH_TRANS = "tasks%dof%d_hevc_trans"
 CFG_TEMPLATE_FILENAME_TRANS = BASE_CONFIG_PATH+"\\config_rewriter.cfg"
 
 BIN_PATH_IN = "..\\bin"
-SEQ_PATH = "..\\seq"
 
 #===============================================================================
 
-MB_thread_usage_enc = {
-    "A":[1600,1.0],
-    "B":[1600,1.0],
-    "C":[1600,1.0],
-    "D":[1600,1.0],
-    "E":[1600,1.0],
-    "F":[1600,1.0]
-}
-
-MB_thread_usage_trans = {#todo
+MB_thread_usage_trans = {
     "A":[1600,1.0],
     "B":[1600,1.0],
     "C":[1600,1.0],
