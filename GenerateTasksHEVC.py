@@ -8,10 +8,9 @@ COMPUTER_NUM = 1   # Liczba komputerow
 #===============================================================================
 MAX_FRAMES = 0
 #===============================================================================
-GEN_ENCODE                          = 0
-GEN_TRANSCODE                       = 1
+GEN_TRANSCODE = 1
 #===============================================================================
-GEN_ALL_CFG              = 0
+GEN_ALL_CFG   = 0
 #===============================================================================
 GEN_SCRIPT_TYPES = ["tsk","bat","sh"] # skrypty taskow do wygenerowania
 #GEN_SCRIPT_TYPES = ["tsk"] # skrypty taskow do wygenerowania
@@ -72,16 +71,9 @@ USER = getpass.getuser()
 
 BASE_CONFIG_PATH = "!base_config"
 BIN_PATH = "!bin"
-
 BIT_PATH = "bit"
 RUN_PATH = "run"
 REC_PATH = "rec"
-
-CFG_PATH_ENC = "cfg_enc"
-LOG_PATH_ENC = "log_enc"
-TASK_PATH_ENC = "tasks%dof%d_hevc_enc"
-
-CFG_TEMPLATE_FILENAME_ENC = BASE_CONFIG_PATH+"\\encoder_randomaccess_main.cfg"
 
 CFG_PATH_TRANS = "cfg_trans"
 LOG_PATH_TRANS = "log_trans"
@@ -90,6 +82,7 @@ TASK_PATH_TRANS = "tasks%dof%d_hevc_trans"
 # CFG_TEMPLATE_FILENAME_TRANS = BASE_CONFIG_PATH+"\\config_transcoder.cfg"
 CFG_TEMPLATE_FILENAME_TRANS = BASE_CONFIG_PATH+"\\config_rewriter.cfg"
 
+BIN_PATH_IN = "..\\bin"
 SEQ_PATH = "..\\seq"
 
 #===============================================================================
@@ -113,8 +106,6 @@ MB_thread_usage_trans = {#todo
 }
 
 #===============================================================================
-
-FINAL_COMMENTS_ENC   = [ "Encoding of HEVC" ]
 
 FINAL_COMMENTS_TRANS = [ "Transcoding of HEVC" ]
 
@@ -200,60 +191,15 @@ def ensure_path_or_del_computer_num(remove_or_create, path, template):
             ppp = path_fixed + (template % (i+1, len(COMPUTER_NUM)))
             if (not os.path.isdir(ppp)):
                 safe_mkdir(ppp)
-
 #===============================================================================
 
 def create_bitstream_filename(s,qp):
     BITSTREAM_FILENAME_TEMPLATE = "..\\..\\%s\\%s_%dx%d_%d_%dbit_bin_QP%02d.bin"
-    return BITSTREAM_FILENAME_TEMPLATE%(BIT_PATH,s2name[s],s2resolution[s][0],s2resolution[s][1],s2framerate[s],s2bitdepth[s],qp)
+    return BITSTREAM_FILENAME_TEMPLATE%(BIN_PATH_IN,s2name[s],s2resolution[s][0],s2resolution[s][1],s2framerate[s],s2bitdepth[s],qp)
 
 def create_output_bitstream_filename(s,qp):
     OUTPUT_BITSTREAM_FILENAME_TEMPLATE = "..\\..\\%s\\%s_%dx%d_%d_%dbit_bin_QP%02d_out.bin"
     return OUTPUT_BITSTREAM_FILENAME_TEMPLATE%(BIT_PATH,s2name[s],s2resolution[s][0],s2resolution[s][1],s2framerate[s],s2bitdepth[s],qp)
-
-def create_video_filename(s):
-    TEMPLATE = "..\\..\\%s\\%s\\%s_%dx%d_%d_%dbit.yuv"
-    return TEMPLATE%(SEQ_PATH,s2class[s],s2name[s],s2resolution[s][0],s2resolution[s][1],s2framerate[s],s2bitdepth[s])
-
-def create_reconstructed_filename(s, qp):
-    TEMPLATE = "..\\..\\%s\\%s_%dx%d_%d_%dbit_QP%02d.yuv"
-    return TEMPLATE%(REC_PATH,s2name[s],s2resolution[s][0],s2resolution[s][1],s2framerate[s],s2bitdepth[s],qp)
-
-#===========================ENCODER=============================================
-def create_task_id_name_enc(s,qp):
-    #Create task id name form sequence number and qp value
-    TASK_ID_NAME_TEMPLATE = "hevc_encoder_%s_%dx%d_%d_%dbit_QP%02d"
-    return TASK_ID_NAME_TEMPLATE%(s2name[s],s2resolution[s][0],s2resolution[s][1],s2framerate[s],s2bitdepth[s],qp)
-
-def create_task_filename_enc(task_idcn,task_id_name):
-    #Create task id name form sequence number and qp value
-    TASK_FILENAME_TEMPLATE = "..\\%s\\%s"
-    return (TASK_FILENAME_TEMPLATE%(TASK_PATH_ENC,task_id_name))%(task_idcn,len(COMPUTER_NUM))
-
-def create_cfg_filename_enc(s, qp):
-    #Create task id name form sequence number and qp value
-    CFG_FILENAME_TEMPLATE = "..\\..\\%s\\%s_QP%02d.cfg"
-    return CFG_FILENAME_TEMPLATE%(CFG_PATH_ENC,s2name[s],qp)
-
-def create_log_filename_enc(s, qp):
-    #Create task id name form sequence number and qp value
-    LOG_FILENAME_TEMPLATE = "..\\..\\%s\\%s_QP%02d_log.txt"
-    return LOG_FILENAME_TEMPLATE%(LOG_PATH_ENC,s2name[s],qp)
-
-def create_err_filename_enc(s, qp):
-    #Create task id name form sequence number and qp value
-    LOG_FILENAME_TEMPLATE = "..\\..\\%s\\%s_QP%02d_err.txt"
-    return LOG_FILENAME_TEMPLATE%(LOG_PATH_ENC,s2name[s],qp)
-
-def create_commandline_enc():
-    #Create task id name form sequence number and qp value
-    COMMAND_LINE_TEMPLATE = "..\\..\\%s\\TAppEncoder.exe"
-    return COMMAND_LINE_TEMPLATE%(BIN_PATH)
-
-def create_argline_enc(s,qp):
-    #Create task id name form sequence number and qp value
-    ARG_LINE_TEMPLATE = "-c %s"
-    return ARG_LINE_TEMPLATE%(create_cfg_filename_enc(s, qp))
 
 #===========================TRANSCODER==========================================
 def create_task_id_name_trans(s,qp):
@@ -284,12 +230,12 @@ def create_err_filename_trans(s, qp):
 def create_commandline_trans():
     #Create task id name form sequence number and qp value
     # COMMAND_LINE_TEMPLATE = "..\\..\\%s\\HEVC_transcoder_x64_Debug.exe" # release better
-    COMMAND_LINE_TEMPLATE = "..\\..\\%s\\HEVC_rewriter_x64_Release.exe"
+    COMMAND_LINE_TEMPLATE = "..\\..\\%s\\HEVC_rewriter_x64_Debug.exe"
     return COMMAND_LINE_TEMPLATE%(BIN_PATH)
 
 def create_argline_trans(s,qp):
     #Create task id name form sequence number and qp value
-    ARG_LINE_TEMPLATE = "-c %s"
+    ARG_LINE_TEMPLATE = "cfg=%s"
     return ARG_LINE_TEMPLATE%(create_cfg_filename_trans(s, qp))
 
 #===============================================================================
@@ -298,21 +244,9 @@ def prepare_paths_or_del(remove_or_create):
     #global PATH
     #global COMPUTER_NUM
     #global BIT_PATH
-    #global CFG_PATH_ENC
-    #global LOG_PATH_ENC
+    #global CFG_PATH_TRANS
+    #global LOG_PATH_TRANS
     #global RUN_PATH
-    #global REC_PATH
-    #global TASK_PATH_ENC
-
-    if (GEN_ENCODE|GEN_ALL_CFG|remove_or_create):
-
-        ensure_path_or_del(remove_or_create, PATH+"\\"+BIT_PATH)
-        ensure_path_or_del(remove_or_create, PATH+"\\"+CFG_PATH_ENC)
-        ensure_path_or_del(remove_or_create, PATH+"\\"+LOG_PATH_ENC)
-        ensure_path_or_del(remove_or_create, PATH+"\\"+REC_PATH)
-        ensure_path_or_del(remove_or_create, PATH+"\\"+RUN_PATH)
-
-        ensure_path_or_del_computer_num(remove_or_create, PATH+"\\", TASK_PATH_ENC)
 
     if (GEN_TRANSCODE|GEN_ALL_CFG|remove_or_create):
 
@@ -349,38 +283,7 @@ def modify_parameter(config, new_parameter_name, new_parameter_value):
     if (need_append):
         new_config.append(new_parameter_name+": "+new_parameter_value+"\n")
     return new_config
-#===============================================================================
-def prepare_config_enc(s,qp):
-    ref_cfg_file = open("..\\..\\"+CFG_TEMPLATE_FILENAME_ENC,'r')
-    config = ref_cfg_file.readlines()
-    ref_cfg_file.close()
 
-    config = modify_parameter(config, "InputFile", create_video_filename(s))
-    config = modify_parameter(config, "ReconFile", create_reconstructed_filename(s, qp))
-    config = modify_parameter(config, "BitstreamFile", create_bitstream_filename(s,qp))
-
-    config = modify_parameter(config, "InputBitDepth", str(s2bitdepth[s]))
-    config = modify_parameter(config, "OutputBitDepth", str(s2bitdepth[s]))
-
-    config = modify_parameter(config, "SourceWidth", str(s2resolution[s][0]))
-    config = modify_parameter(config, "SourceHeight", str(s2resolution[s][1]))
-
-    config = modify_parameter(config, "FrameRate", str(s2framerate[s]))
-
-    if (MAX_FRAMES<=0):
-        frames = s2frames[s]
-    else:
-        frames = min(MAX_FRAMES, s2frames[s])
-    config = modify_parameter(config, "FramesToBeEncoded", str(frames))
-
-    config = modify_parameter(config, "QP", str(qp))
-
-    cfg_filename = create_cfg_filename_enc(s, qp)
-    cfg = open(cfg_filename,'w')
-    cfg.writelines(config)
-    cfg.close()
-
-    return cfg_filename
 #===============================================================================
 
 def prepare_config_trans(s,qp):
@@ -479,25 +382,6 @@ for s in s2do: #Loop over every sequence to do
 
         print("  HTM GEN("+str(task_idcn)+"/"+str(len(COMPUTER_NUM)) + ")   "+s2name[s]+" QP:"+str(qp) )
         last_task_filename = ""
-
-#       encoding
-        task_id_name_enc = create_task_id_name_enc(s,qp)
-        if (GEN_ENCODE|GEN_ALL_CFG):
-            ensure_path(PATH+"\\"+RUN_PATH+"\\"+task_id_name_enc)
-            os.chdir(PATH+"\\"+RUN_PATH+"\\"+task_id_name_enc)
-
-            prepare_config_enc(s,qp)
-
-        log_filename = create_log_filename_enc(s,qp)
-        err_filename = create_err_filename_enc(s,qp)
-        commandline  = create_commandline_enc()
-        argline      = create_argline_enc(s,qp)
-
-        os.chdir(PATH+"\\"+RUN_PATH+"\\")
-        if (GEN_ENCODE):
-            new_task_filename = create_task_filename_enc(task_idcn,task_id_name_enc)
-            generate_task_v2(GEN_SCRIPT_TYPES, new_task_filename, RUN_PATH+"\\"+task_id_name_enc, [commandline,argline], [log_filename,err_filename],MB_thread_usage_enc[s2class[s]], USER, sys.argv[0], EMAIL_ENABLE, EMAIL_RECIPIENTS, FINAL_COMMENTS_ENC, last_task_filename)
-            last_task_filename = new_task_filename
 
 #       transcoding
         task_id_name_trans = create_task_id_name_trans(s,qp)
