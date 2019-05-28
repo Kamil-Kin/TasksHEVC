@@ -284,21 +284,21 @@ def prepare_config_trans(s,qp):
     config = modify_parameter(config, "InputBitstreamFile", create_bitstream_filename(s,qp))
     config = modify_parameter(config, "OutputBitstreamFile", create_output_bitstream_filename(s,qp))
 
-    config = modify_parameter(config, "InputBitDepth", str(s2bitdepth[s]))
-    config = modify_parameter(config, "OutputBitDepth", str(s2bitdepth[s]))
-
-    config = modify_parameter(config, "SourceWidth", str(s2resolution[s][0]))
-    config = modify_parameter(config, "SourceHeight", str(s2resolution[s][1]))
-
-    config = modify_parameter(config, "FrameRate", str(s2framerate[s]))
-
-    if (MAX_FRAMES<=0):
-        frames = s2frames[s]
-    else:
-        frames = min(MAX_FRAMES, s2frames[s])
-    config = modify_parameter(config, "FramesToBeEncoded", str(frames))
-
-    config = modify_parameter(config, "QP", str(qp))
+    ##config = modify_parameter(config, "InputBitDepth", str(s2bitdepth[s]))
+    ##config = modify_parameter(config, "OutputBitDepth", str(s2bitdepth[s]))
+    ##
+    ##config = modify_parameter(config, "SourceWidth", str(s2resolution[s][0]))
+    ##config = modify_parameter(config, "SourceHeight", str(s2resolution[s][1]))
+    ##
+    ##config = modify_parameter(config, "FrameRate", str(s2framerate[s]))
+    ##
+    ##if (MAX_FRAMES<=0):
+    ##    frames = s2frames[s]
+    ##else:
+    ##    frames = min(MAX_FRAMES, s2frames[s])
+    ##config = modify_parameter(config, "FramesToBeEncoded", str(frames))
+    ##
+    ##config = modify_parameter(config, "QP", str(qp))
 
     cfg_filename = create_cfg_filename_trans(s, qp)
     cfg = open(cfg_filename,'w')
