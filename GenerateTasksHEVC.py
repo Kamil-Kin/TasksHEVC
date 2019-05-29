@@ -56,7 +56,7 @@ PATH = os.path.abspath(PATH)
 
 SCRIPTS_PATH = "!script"
 
-sys.path.append(PATH+"\\"+SCRIPTS_PATH)
+sys.path.append(PATH+"/"+SCRIPTS_PATH)
 
 from task_generation_v2 import *
 from s2name import *
@@ -79,10 +79,10 @@ CFG_PATH_TRANS = "cfg_trans"
 LOG_PATH_TRANS = "log_trans"
 TASK_PATH_TRANS = "tasks%dof%d_hevc_trans"
 
-# CFG_TEMPLATE_FILENAME_TRANS = BASE_CONFIG_PATH+"\\config_transcoder.cfg"
-CFG_TEMPLATE_FILENAME_TRANS = BASE_CONFIG_PATH+"\\config_rewriter.cfg"
+# CFG_TEMPLATE_FILENAME_TRANS = BASE_CONFIG_PATH+"/config_transcoder.cfg"
+CFG_TEMPLATE_FILENAME_TRANS = BASE_CONFIG_PATH+"/config_rewriter.cfg"
 
-BIN_PATH_IN = "..\\bin"
+BIN_PATH_IN = "../bin"
 
 #===============================================================================
 
@@ -122,7 +122,7 @@ except:
 # procedures
 #===============================================================================
 def path_fix(path):
-    return path.replace('\\',os.sep).replace('/',os.sep)
+    return path.replace('/',os.sep).replace('/',os.sep)
 #===============================================================================
 def safe_rmtree(path, ignore_errors):
     try:
@@ -173,7 +173,7 @@ def ensure_path_or_del_computer_num(remove_or_create, path, template):
         dir_list = os.listdir(path_fix(path))
         for dir in dir_list:
             if fnmatch.fnmatch(dir, template):
-                ppp = path_fix(path + '\\' + dir)
+                ppp = path_fix(path + '/' + dir)
                 if os.path.isdir(ppp):
                     safe_rmtree(ppp, ignore_errors=False)
     else:
@@ -184,11 +184,11 @@ def ensure_path_or_del_computer_num(remove_or_create, path, template):
 #===============================================================================
 
 def create_bitstream_filename(s,qp):
-    BITSTREAM_FILENAME_TEMPLATE = "..\\..\\%s\\%s_%dx%d_%d_%dbit_bin_QP%02d.bin"
+    BITSTREAM_FILENAME_TEMPLATE = "../../%s/%s_%dx%d_%d_%dbit_bin_QP%02d.bin"
     return BITSTREAM_FILENAME_TEMPLATE%(BIN_PATH_IN,s2name[s],s2resolution[s][0],s2resolution[s][1],s2framerate[s],s2bitdepth[s],qp)
 
 def create_output_bitstream_filename(s,qp):
-    OUTPUT_BITSTREAM_FILENAME_TEMPLATE = "..\\..\\%s\\%s_%dx%d_%d_%dbit_bin_QP%02d_out.bin"
+    OUTPUT_BITSTREAM_FILENAME_TEMPLATE = "../../%s/%s_%dx%d_%d_%dbit_bin_QP%02d_out.bin"
     return OUTPUT_BITSTREAM_FILENAME_TEMPLATE%(BIT_PATH,s2name[s],s2resolution[s][0],s2resolution[s][1],s2framerate[s],s2bitdepth[s],qp)
 
 #===========================TRANSCODER==========================================
@@ -199,28 +199,27 @@ def create_task_id_name_trans(s,qp):
 
 def create_task_filename_trans(task_idcn,task_id_name):
     #Create task id name form sequence number and qp value
-    TASK_FILENAME_TEMPLATE = "..\\%s\\%s"
+    TASK_FILENAME_TEMPLATE = "../%s/%s"
     return (TASK_FILENAME_TEMPLATE%(TASK_PATH_TRANS,task_id_name))%(task_idcn,len(COMPUTER_NUM))
 
 def create_cfg_filename_trans(s, qp):
     #Create task id name form sequence number and qp value
-    CFG_FILENAME_TEMPLATE = "..\\..\\%s\\%s_QP%02d.cfg"
+    CFG_FILENAME_TEMPLATE = "../../%s/%s_QP%02d.cfg"
     return CFG_FILENAME_TEMPLATE%(CFG_PATH_TRANS,s2name[s],qp)
 
 def create_log_filename_trans(s, qp):
     #Create task id name form sequence number and qp value
-    LOG_FILENAME_TEMPLATE = "..\\..\\%s\\%s_QP%02d_log.txt"
+    LOG_FILENAME_TEMPLATE = "../../%s/%s_QP%02d_log.txt"
     return LOG_FILENAME_TEMPLATE%(LOG_PATH_TRANS,s2name[s],qp)
 
 def create_err_filename_trans(s, qp):
     #Create task id name form sequence number and qp value
-    LOG_FILENAME_TEMPLATE = "..\\..\\%s\\%s_QP%02d_err.txt"
+    LOG_FILENAME_TEMPLATE = "../../%s/%s_QP%02d_err.txt"
     return LOG_FILENAME_TEMPLATE%(LOG_PATH_TRANS,s2name[s],qp)
 
 def create_commandline_trans():
     #Create task id name form sequence number and qp value
-    # COMMAND_LINE_TEMPLATE = "..\\..\\%s\\HEVC_transcoder_x64_Debug.exe" # release better
-    COMMAND_LINE_TEMPLATE = "..\\..\\%s\\HEVC_rewriter_x64_Release.exe"
+    COMMAND_LINE_TEMPLATE = "../../%s/HEVC.out"
     return COMMAND_LINE_TEMPLATE%(BIN_PATH)
 
 def create_argline_trans(s,qp):
@@ -240,12 +239,12 @@ def prepare_paths_or_del(remove_or_create):
 
     if (GEN_TRANSCODE|GEN_ALL_CFG|remove_or_create):
 
-        ensure_path_or_del(remove_or_create, PATH+"\\"+BIT_PATH)
-        ensure_path_or_del(remove_or_create, PATH+"\\"+CFG_PATH_TRANS)
-        ensure_path_or_del(remove_or_create, PATH+"\\"+LOG_PATH_TRANS)
-        ensure_path_or_del(remove_or_create, PATH+"\\"+RUN_PATH)
+        ensure_path_or_del(remove_or_create, PATH+"/"+BIT_PATH)
+        ensure_path_or_del(remove_or_create, PATH+"/"+CFG_PATH_TRANS)
+        ensure_path_or_del(remove_or_create, PATH+"/"+LOG_PATH_TRANS)
+        ensure_path_or_del(remove_or_create, PATH+"/"+RUN_PATH)
 
-        ensure_path_or_del_computer_num(remove_or_create, PATH+"\\", TASK_PATH_TRANS)
+        ensure_path_or_del_computer_num(remove_or_create, PATH+"/", TASK_PATH_TRANS)
 
     return
 #===============================================================================
@@ -277,7 +276,7 @@ def modify_parameter(config, new_parameter_name, new_parameter_value):
 #===============================================================================
 
 def prepare_config_trans(s,qp):
-    ref_cfg_file = open("..\\..\\"+CFG_TEMPLATE_FILENAME_TRANS,'r')
+    ref_cfg_file = open("../../"+CFG_TEMPLATE_FILENAME_TRANS,'r')
     config = ref_cfg_file.readlines()
     ref_cfg_file.close()
 
@@ -286,12 +285,12 @@ def prepare_config_trans(s,qp):
 
     ##config = modify_parameter(config, "InputBitDepth", str(s2bitdepth[s]))
     ##config = modify_parameter(config, "OutputBitDepth", str(s2bitdepth[s]))
-    ##
+    
     ##config = modify_parameter(config, "SourceWidth", str(s2resolution[s][0]))
     ##config = modify_parameter(config, "SourceHeight", str(s2resolution[s][1]))
-    ##
+    
     ##config = modify_parameter(config, "FrameRate", str(s2framerate[s]))
-    ##
+    
     ##if (MAX_FRAMES<=0):
     ##    frames = s2frames[s]
     ##else:
@@ -337,7 +336,7 @@ mx_input("press any key to start (confirm)")
 
 prepare_paths_or_del(0) #Create necesary paths
 
-#experiment_seed = PATH.replace('/','\\').rpartition('\\')
+#experiment_seed = PATH.replace('/','/').rpartition('/')
 experiment_seed = os.path.basename(PATH)
 random.seed(experiment_seed);
 computers = []
@@ -376,8 +375,8 @@ for s in s2do: #Loop over every sequence to do
 #       transcoding
         task_id_name_trans = create_task_id_name_trans(s,qp)
         if (GEN_TRANSCODE|GEN_ALL_CFG):
-            ensure_path(PATH+"\\"+RUN_PATH+"\\"+task_id_name_trans)
-            os.chdir(PATH+"\\"+RUN_PATH+"\\"+task_id_name_trans)
+            ensure_path(PATH+"/"+RUN_PATH+"/"+task_id_name_trans)
+            os.chdir(PATH+"/"+RUN_PATH+"/"+task_id_name_trans)
 
             prepare_config_trans(s,qp)
 
@@ -386,10 +385,10 @@ for s in s2do: #Loop over every sequence to do
         commandline  = create_commandline_trans()
         argline      = create_argline_trans(s,qp)
 
-        os.chdir(PATH+"\\"+RUN_PATH+"\\")
+        os.chdir(PATH+"/"+RUN_PATH+"/")
         if (GEN_TRANSCODE):
             new_task_filename = create_task_filename_trans(task_idcn,task_id_name_trans)
-            generate_task_v2(GEN_SCRIPT_TYPES, new_task_filename, RUN_PATH+"\\"+task_id_name_trans, [commandline,argline], [log_filename,err_filename],MB_thread_usage_trans[s2class[s]], USER, sys.argv[0], EMAIL_ENABLE, EMAIL_RECIPIENTS, FINAL_COMMENTS_TRANS, last_task_filename)
+            generate_task_v2(GEN_SCRIPT_TYPES, new_task_filename, RUN_PATH+"/"+task_id_name_trans, [commandline,argline], [log_filename,err_filename],MB_thread_usage_trans[s2class[s]], USER, sys.argv[0], EMAIL_ENABLE, EMAIL_RECIPIENTS, FINAL_COMMENTS_TRANS, last_task_filename)
             last_task_filename = new_task_filename
 
 for i in range(len(COMPUTER_NUM)):
