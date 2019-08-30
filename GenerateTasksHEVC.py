@@ -224,7 +224,7 @@ def create_commandline_trans():
 
 def create_argline_trans(s,qp,mode):
     #Create task id name form sequence number and qp value
-    ARG_LINE_TEMPLATE = "-R cfg=%s"
+    ARG_LINE_TEMPLATE = "-R -c %s"
     return ARG_LINE_TEMPLATE%(create_cfg_filename_trans(s, qp, mode))
 
 #===============================================================================
