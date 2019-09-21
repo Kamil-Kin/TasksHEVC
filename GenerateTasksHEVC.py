@@ -224,8 +224,18 @@ def create_commandline_trans():
 
 def create_argline_trans(s,qp):
     #Create task id name form sequence number and qp value
-    ARG_LINE_TEMPLATE = "-R -c %s"
+    ARG_LINE_TEMPLATE = "-T -c %s"
     return ARG_LINE_TEMPLATE%(create_cfg_filename_trans(s, qp))
+
+def create_psnrline_trans():
+    #Create task id name form sequence number and qp value
+    PSNR_LINE_TEMPLATE = "../../%s/psnr.out"
+    return PSNR_LINE_TEMPLATE%(BIN_PATH)
+
+def create_psnr_argline_trans(s,qp):
+    #Create task id name form sequence number and qp value
+    PSNR_ARGLINE_TEMPLATE = "-i1 %s -i2 %s -dx %d -dy %d"
+    return PSNR_ARGLINE_TEMPLATE%(create_bitstream_filename(s,qp),create_output_bitstream_filename(s,qp),s2resolution[s][0],s2resolution[s][1])
 
 #===============================================================================
 
@@ -385,6 +395,8 @@ for s in s2do: #Loop over every sequence to do
         err_filename = create_err_filename_trans(s,qp)
         commandline  = create_commandline_trans()
         argline      = create_argline_trans(s,qp)
+        psnrline     = create_psnrline_trans()
+        psnrargline  = create_psnr_argline_trans(s,qp)
 
         os.chdir(PATH+"/"+RUN_PATH+"/")
         if (GEN_TRANSCODE):
