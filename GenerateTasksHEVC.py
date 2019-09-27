@@ -187,6 +187,10 @@ def create_bitstream_filename(s,qp):
     BITSTREAM_FILENAME_TEMPLATE = "../../%s/%s_%dx%d_%d_%dbit_bin_QP%01d.bin"
     return BITSTREAM_FILENAME_TEMPLATE%(BIN_PATH_IN,s2name[s],s2resolution[s][0],s2resolution[s][1],s2framerate[s],s2bitdepth[s],qp)
 
+def create_yuv_bitstream_filename(s):
+    YUV_BITSTREAM_FILENAME_TEMPLATE = "../../%s/%s_%dx%d_%d_%dbit.yuv"
+    return YUV_BITSTREAM_FILENAME_TEMPLATEE%(BIN_PATH_IN,s2name[s],s2resolution[s][0],s2resolution[s][1],s2framerate[s],s2bitdepth[s])
+
 def create_output_bitstream_filename(s,qp):
     OUTPUT_BITSTREAM_FILENAME_TEMPLATE = "../../%s/%s_%dx%d_%d_%dbit_bin_QP%02d_out.bin"
     return OUTPUT_BITSTREAM_FILENAME_TEMPLATE%(BIT_PATH,s2name[s],s2resolution[s][0],s2resolution[s][1],s2framerate[s],s2bitdepth[s],qp)
@@ -232,10 +236,15 @@ def create_psnrline_trans():
     PSNR_LINE_TEMPLATE = "../../%s/psnr.out"
     return PSNR_LINE_TEMPLATE%(BIN_PATH)
 
-def create_psnr_argline_trans(s,qp):
+def create_enc_psnr_argline_trans(s,qp):
     #Create task id name form sequence number and qp value
-    PSNR_ARGLINE_TEMPLATE = "-i1 %s -i2 %s -dx %d -dy %d"
-    return PSNR_ARGLINE_TEMPLATE%(create_bitstream_filename(s,qp),create_output_bitstream_filename(s,qp),s2resolution[s][0],s2resolution[s][1])
+    ENC_PSNR_ARGLINE_TEMPLATE = "-i1 %s -i2 %s -dx %d -dy %d"
+    return ENC_PSNR_ARGLINE_TEMPLATE%(create_yuv_bitstream_filename(s),create_output_bitstream_filename(s,qp),s2resolution[s][0],s2resolution[s][1])
+
+def create_trans_psnr_argline_trans(s,qp):
+    #Create task id name form sequence number and qp value
+    TRANS_PSNR_ARGLINE_TEMPLATE = "-i1 %s -i2 %s -dx %d -dy %d"
+    return TRANS_PSNR_ARGLINE_TEMPLATE%(create_yuv_bitstream_filename(s),create_bitstream_filename(s,qp),s2resolution[s][0],s2resolution[s][1])
 
 #===============================================================================
 
@@ -391,12 +400,13 @@ for s in s2do: #Loop over every sequence to do
 
             prepare_config_trans(s,qp)
 
-        log_filename = create_log_filename_trans(s,qp)
-        err_filename = create_err_filename_trans(s,qp)
-        commandline  = create_commandline_trans()
-        argline      = create_argline_trans(s,qp)
-        psnrline     = create_psnrline_trans()
-        psnrargline  = create_psnr_argline_trans(s,qp)
+        log_filename   = create_log_filename_trans(s,qp)
+        err_filename   = create_err_filename_trans(s,qp)
+        commandline    = create_commandline_trans()
+        argline        = create_argline_trans(s,qp)
+        psnrline       = create_psnrline_trans()
+        enc_psnrline   = create_enc_psnr_argline_trans(s,qp)
+        trans_psnrline = create_trans_psnr_argline_trans(s,qp)
 
         os.chdir(PATH+"/"+RUN_PATH+"/")
         if (GEN_TRANSCODE):
