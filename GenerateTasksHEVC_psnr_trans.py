@@ -436,7 +436,7 @@ for s in s2do: #Loop over every sequence to do
         os.chdir(PATH+"/"+RUN_PATH+"/")
         if (GEN_TRANSCODE):
             new_task_filename = create_task_filename_trans(task_idcn,task_id_name_trans)
-            generate_task_v2(GEN_SCRIPT_TYPES, new_task_filename, RUN_PATH+"/"+task_id_name_trans, [commandline,argline], [log_filename,err_filename], MB_thread_usage_trans[s2class[s]], USER, sys.argv[0], EMAIL_ENABLE, EMAIL_RECIPIENTS, FINAL_COMMENTS_TRANS, last_task_filename)
+            generate_task_v2(GEN_SCRIPT_TYPES, new_task_filename, RUN_PATH+"/"+task_id_name_trans, [commandline_psnr,argline_psnr_trans], [log_filename_psnr_trans,err_filename_psnr_trans], MB_thread_usage_trans[s2class[s]], USER, sys.argv[0], EMAIL_ENABLE, EMAIL_RECIPIENTS, FINAL_COMMENTS_TRANS, last_task_filename)
             last_task_filename = new_task_filename
 
 for i in range(len(COMPUTER_NUM)):
