@@ -222,16 +222,6 @@ def create_err_filename_psnr_trans_2x1(s,qp):
     LOG_FILENAME_TEMPLATE = "../../%s/%s_QP%02d_err_psnr_trans_2x1.txt"
     return LOG_FILENAME_TEMPLATE%(LOG_PATH_TRANS,s2name[s],qp)
 
-def create_commandline_trans():
-    #Create task id name form sequence number and qp value
-    COMMAND_LINE_TEMPLATE = "../../%s/HEVC.out"
-    return COMMAND_LINE_TEMPLATE%(BIN_PATH)
-
-def create_argline_trans(s,qp):
-    #Create task id name form sequence number and qp value
-    ARG_LINE_TEMPLATE = "-T -c %s"
-    return ARG_LINE_TEMPLATE%(create_cfg_filename_trans(s, qp))
-
 def create_commandline_psnr():
     #Create task id name form sequence number and qp value
     COMMAND_LINE_PSNR_TEMPLATE = "../../%s/psnr.out"
@@ -382,11 +372,8 @@ for s in s2do: #Loop over every sequence to do
         log_filename_psnr_trans_2x1 = create_log_filename_psnr_trans_2x1(s,qp)
         err_filename_psnr_trans_2x1 = create_err_filename_psnr_trans_2x1(s,qp)
 
-        commandline                 = create_commandline_trans()
-        argline                     = create_argline_trans(s,qp)
         commandline_psnr            = create_commandline_psnr()
         argline_psnr_trans_2x1      = create_argline_psnr_trans2(s,qp)
-
 
         os.chdir(PATH+"/"+RUN_PATH+"/")
         if (GEN_TRANSCODE):

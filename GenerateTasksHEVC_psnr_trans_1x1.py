@@ -377,8 +377,6 @@ for s in s2do: #Loop over every sequence to do
         log_filename_psnr_trans_1x1 = create_log_filename_psnr_trans_1x1(s,qp)
         err_filename_psnr_trans_1x1 = create_err_filename_psnr_trans_1x1(s,qp)
  
-        commandline                 = create_commandline_trans()
-        argline                     = create_argline_trans(s,qp)
         commandline_psnr            = create_commandline_psnr()
         argline_psnr_trans_1x1      = create_argline_psnr_trans(s,qp)
 
