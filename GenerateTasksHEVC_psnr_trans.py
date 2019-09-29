@@ -83,7 +83,7 @@ CFG_TEMPLATE_FILENAME_TRANS = BASE_CONFIG_PATH+"/config_transcoder.cfg"
 # CFG_TEMPLATE_FILENAME_TRANS = BASE_CONFIG_PATH+"/config_rewriter.cfg"
 
 BIN_PATH_IN = "../bin"
-TEST_PATH = "../test"
+YUV_PATH = "../seq_HEVC"
 
 #===============================================================================
 
@@ -190,7 +190,7 @@ def create_bitstream_filename(s,qp):
 
 def create_yuv_bitstream_filename(s):
     YUV_BITSTREAM_FILENAME_TEMPLATE = "../../%s/%s_%dx%d_%d_%dbit.yuv"
-    return YUV_BITSTREAM_FILENAME_TEMPLATE%(TEST_PATH,s2name[s],s2resolution[s][0],s2resolution[s][1],s2framerate[s],s2bitdepth[s])
+    return YUV_BITSTREAM_FILENAME_TEMPLATE%(YUV_PATH,s2name[s],s2resolution[s][0],s2resolution[s][1],s2framerate[s],s2bitdepth[s])
 
 def create_output_bitstream_filename(s,qp):
     OUTPUT_BITSTREAM_FILENAME_TEMPLATE = "../../%s/%s_%dx%d_%d_%dbit_bin_QP%02d_out.bin"
