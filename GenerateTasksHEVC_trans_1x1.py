@@ -212,34 +212,14 @@ def create_cfg_filename_trans(s,qp):
     CFG_FILENAME_TEMPLATE = "../../%s/%s_QP%02d.cfg"
     return CFG_FILENAME_TEMPLATE%(CFG_PATH_TRANS,s2name[s],qp)
 
-def create_log_filename_trans(s,qp):
+def create_log_filename_trans_1x1(s,qp):
     #Create task id name form sequence number and qp value
-    LOG_FILENAME_TEMPLATE = "../../%s/%s_QP%02d_log.txt"
+    LOG_FILENAME_TEMPLATE = "../../%s/%s_QP%02d_log_1x1.txt"
     return LOG_FILENAME_TEMPLATE%(LOG_PATH_TRANS,s2name[s],qp)
 
-def create_err_filename_trans(s,qp):
+def create_err_filename_trans_1x1(s,qp):
     #Create task id name form sequence number and qp value
-    LOG_FILENAME_TEMPLATE = "../../%s/%s_QP%02d_err.txt"
-    return LOG_FILENAME_TEMPLATE%(LOG_PATH_TRANS,s2name[s],qp)
-
-def create_log_filename_psnr_org(s,qp):
-    #Create task id name form sequence number and qp value
-    LOG_FILENAME_TEMPLATE = "../../%s/%s_QP%02d_log_psnr_org.txt"
-    return LOG_FILENAME_TEMPLATE%(LOG_PATH_TRANS,s2name[s],qp)
-
-def create_err_filename_psnr_org(s,qp):
-    #Create task id name form sequence number and qp value
-    LOG_FILENAME_TEMPLATE = "../../%s/%s_QP%02d_err_psnr_org.txt"
-    return LOG_FILENAME_TEMPLATE%(LOG_PATH_TRANS,s2name[s],qp)
-
-def create_log_filename_psnr_trans(s,qp):
-    #Create task id name form sequence number and qp value
-    LOG_FILENAME_TEMPLATE = "../../%s/%s_QP%02d_log_psnr_trans.txt"
-    return LOG_FILENAME_TEMPLATE%(LOG_PATH_TRANS,s2name[s],qp)
-
-def create_err_filename_psnr_trans(s,qp):
-    #Create task id name form sequence number and qp value
-    LOG_FILENAME_TEMPLATE = "../../%s/%s_QP%02d_err_psnr_trans.txt"
+    LOG_FILENAME_TEMPLATE = "../../%s/%s_QP%02d_err_1x1.txt"
     return LOG_FILENAME_TEMPLATE%(LOG_PATH_TRANS,s2name[s],qp)
 
 def create_commandline_trans():
@@ -251,21 +231,6 @@ def create_argline_trans(s,qp):
     #Create task id name form sequence number and qp value
     ARG_LINE_TEMPLATE = "-T -c %s"
     return ARG_LINE_TEMPLATE%(create_cfg_filename_trans(s, qp))
-
-def create_commandline_psnr():
-    #Create task id name form sequence number and qp value
-    COMMAND_LINE_PSNR_TEMPLATE = "../../%s/psnr.out"
-    return COMMAND_LINE_PSNR_TEMPLATE%(BIN_PATH)
-
-def create_argline_psnr_org(s,qp):
-    #Create task id name form sequence number and qp value
-    ARGLINE_PSNR_ENC_TEMPLATE = "-i1 %s -i2 %s -dx %d -dy %d"
-    return ARGLINE_PSNR_ENC_TEMPLATE%(create_yuv_bitstream_filename(s),create_bitstream_filename(s,qp),s2resolution[s][0],s2resolution[s][1])
-
-def create_argline_psnr_trans(s,qp):
-    #Create task id name form sequence number and qp value
-    ARGLINE_PSNR_TRANS_TEMPLATE = "-i1 %s -i2 %s -dx %d -dy %d"
-    return ARGLINE_PSNR_TRANS_TEMPLATE%(create_yuv_bitstream_filename(s),create_output_bitstream_filename(s,qp),s2resolution[s][0],s2resolution[s][1])
 
 #===============================================================================
 
@@ -322,23 +287,6 @@ def prepare_config_trans(s,qp):
 
     config = modify_parameter(config, "InputBitstreamFile", create_bitstream_filename(s,qp))
     config = modify_parameter(config, "OutputBitstreamFile", create_output_bitstream_filename(s,qp))
-
-    #config = modify_parameter(config, "RewritingMode", mode)
-    #config = modify_parameter(config, "InputBitDepth", str(s2bitdepth[s]))
-    #config = modify_parameter(config, "OutputBitDepth", str(s2bitdepth[s]))
-    #
-    #config = modify_parameter(config, "SourceWidth", str(s2resolution[s][0]))
-    #config = modify_parameter(config, "SourceHeight", str(s2resolution[s][1]))
-    #
-    #config = modify_parameter(config, "FrameRate", str(s2framerate[s]))
-    #
-    #if (MAX_FRAMES<=0):
-    #    frames = s2frames[s]
-    #else:
-    #    frames = min(MAX_FRAMES, s2frames[s])
-    #config = modify_parameter(config, "FramesToBeEncoded", str(frames))
-    #
-    #config = modify_parameter(config, "QP", str(qp))
     
     cfg_filename = create_cfg_filename_trans(s, qp)
     cfg = open(cfg_filename,'w')
@@ -421,22 +369,16 @@ for s in s2do: #Loop over every sequence to do
 
             prepare_config_trans(s,qp)
 
-        log_filename            = create_log_filename_trans(s,qp)
-        err_filename            = create_err_filename_trans(s,qp)
-        log_filename_psnr_org   = create_log_filename_psnr_org(s,qp)
-        err_filename_psnr_org   = create_err_filename_psnr_org(s,qp)
-        log_filename_psnr_trans = create_log_filename_psnr_trans(s,qp)
-        err_filename_psnr_trans = create_err_filename_psnr_trans(s,qp)
-        commandline             = create_commandline_trans()
-        argline                 = create_argline_trans(s,qp)
-        commandline_psnr        = create_commandline_psnr()
-        argline_psnr_org        = create_argline_psnr_org(s,qp)
-        argline_psnr_trans      = create_argline_psnr_trans(s,qp)
+        log_filename_trans_1x1 = create_log_filename_trans_1x1(s,qp)
+        err_filename_trans_1x1 = create_err_filename_trans_1x1(s,qp)
+
+        commandline            = create_commandline_trans()
+        argline                = create_argline_trans(s,qp)
 
         os.chdir(PATH+"/"+RUN_PATH+"/")
         if (GEN_TRANSCODE):
             new_task_filename = create_task_filename_trans(task_idcn,task_id_name_trans)
-            generate_task_v2(GEN_SCRIPT_TYPES, new_task_filename, RUN_PATH+"/"+task_id_name_trans, [commandline_psnr,argline_psnr_trans], [log_filename_psnr_trans,err_filename_psnr_trans], MB_thread_usage_trans[s2class[s]], USER, sys.argv[0], EMAIL_ENABLE, EMAIL_RECIPIENTS, FINAL_COMMENTS_TRANS, last_task_filename)
+            generate_task_v2(GEN_SCRIPT_TYPES, new_task_filename, RUN_PATH+"/"+task_id_name_trans, [commandline,argline], [log_filename_trans_1x1,err_filename_trans_1x1], MB_thread_usage_trans[s2class[s]], USER, sys.argv[0], EMAIL_ENABLE, EMAIL_RECIPIENTS, FINAL_COMMENTS_TRANS, last_task_filename)
             last_task_filename = new_task_filename
 
 for i in range(len(COMPUTER_NUM)):
