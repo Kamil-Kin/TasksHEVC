@@ -264,7 +264,7 @@ def create_argline_psnr_org(s,qp):
 
 def create_argline_psnr_trans(s,qp):
     #Create task id name form sequence number and qp value
-    ARGLIN_TEMPLATE = "-i1 %s -i2 %s -dx %d -dy %d"
+    ARGLINE_TEMPLATE = "-i1 %s -i2 %s -dx %d -dy %d"
     return ARGLINE_TEMPLATE%(create_yuv_filename(s),create_output_bitstream_filename(s,qp),s2resolution[s][0],s2resolution[s][1])
 
 #===============================================================================
