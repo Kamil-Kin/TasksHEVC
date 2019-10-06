@@ -29,6 +29,7 @@
     <Compile Include="!script\s2resolution.py" />
     <Compile Include="!script\task_generation_v2.py" />
     <Compile Include="GenerateTasksHEVC.py" />
+    <Compile Include="GenerateTasksHEVC_local.py" />
 	<Compile Include="GenerateTasksHEVC_rewriter.py" />
     <Compile Include="SummaryToExcel_TG_kbps.py" />
   </ItemGroup>

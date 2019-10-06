@@ -16,12 +16,12 @@ GEN_SCRIPT_TYPES = ["tsk","bat","sh"] # skrypty taskow do wygenerowania
 #GEN_SCRIPT_TYPES = ["tsk"] # skrypty taskow do wygenerowania
 #===============================================================================
 s2do = [
-    "Traffic"            ,
-    "PeopleOnStreet"     ,
+#    "Traffic"            ,
+#    "PeopleOnStreet"     ,
 #    "Nebuta"             ,
 #    "SteamLocomotive"    ,
     "Kimono1"            ,
-    "ParkScene"          ,
+#    "ParkScene"          ,
 #    "Cactus"             ,
 #    "BQTerrace"          ,
 #    "BasketballDrive"    ,
