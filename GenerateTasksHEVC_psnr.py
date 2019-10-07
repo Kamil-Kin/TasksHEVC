@@ -8,7 +8,7 @@ COMPUTER_NUM = 1   # Liczba komputerow
 #===============================================================================
 MAX_FRAMES = 0
 #===============================================================================
-GEN_TRANSCODE = 1
+GEN_TRANSCODE = 0
 GEN_PSNR = 1
 #===============================================================================
 GEN_ALL_CFG   = 0
@@ -80,7 +80,6 @@ CFG_PATH_TRANS = "cfg_trans"
 LOG_PATH_TRANS = "log_trans"
 
 TASK_PATH_TRANS = "tasks%dof%d_hevc_trans"
-TASK_PATH_PSNR = "tasks%dof%d_hevc_psnr"
 
 CFG_TEMPLATE_FILENAME_TRANS = BASE_CONFIG_PATH+"/config_transcoder.cfg"
 # CFG_TEMPLATE_FILENAME_TRANS = BASE_CONFIG_PATH+"/config_rewriter.cfg"
@@ -215,15 +214,10 @@ def create_task_id_name_psnr(s,qp):
     TASK_ID_NAME_TEMPLATE = "hevc_psnr_%s_%dx%d_%d_%dbit_QP%02d"
     return TASK_ID_NAME_TEMPLATE%(s2name[s],s2resolution[s][0],s2resolution[s][1],s2framerate[s],s2bitdepth[s],qp)
 
-def create_task_id_name_psnr_trans(s,qp): 
-    #Create task id name form sequence number and qp value
-    TASK_ID_NAME_TEMPLATE = "hevc_psnr_transcoder_%s_%dx%d_%d_%dbit_QP%02d"
-    return TASK_ID_NAME_TEMPLATE%(s2name[s],s2resolution[s][0],s2resolution[s][1],s2framerate[s],s2bitdepth[s],qp)
-
 def create_task_filename_psnr(task_idcn,task_id_name):
     #Create task id name form sequence number and qp value
     TASK_FILENAME_TEMPLATE = "../%s/%s"
-    return (TASK_FILENAME_TEMPLATE%(TASK_PATH_PSNR,task_id_name))%(task_idcn,len(COMPUTER_NUM))
+    return (TASK_FILENAME_TEMPLATE%(TASK_PATH_TRANS,task_id_name))%(task_idcn,len(COMPUTER_NUM))
 
 def create_cfg_filename_trans(s,qp):
     #Create task id name form sequence number and qp value
@@ -250,16 +244,6 @@ def create_err_filename_psnr_org(s,qp):
     LOG_FILENAME_TEMPLATE = "../../%s/%s_QP%02d_err_psnr_org.txt"
     return LOG_FILENAME_TEMPLATE%(LOG_PATH_TRANS,s2name[s],qp)
 
-def create_log_filename_psnr_trans(s,qp):
-    #Create task id name form sequence number and qp value
-    LOG_FILENAME_TEMPLATE = "../../%s/%s_QP%02d_log_psnr_trans.txt"
-    return LOG_FILENAME_TEMPLATE%(LOG_PATH_TRANS,s2name[s],qp)
-
-def create_err_filename_psnr_trans(s,qp):
-    #Create task id name form sequence number and qp value
-    LOG_FILENAME_TEMPLATE = "../../%s/%s_QP%02d_err_psnr_trans.txt"
-    return LOG_FILENAME_TEMPLATE%(LOG_PATH_TRANS,s2name[s],qp)
-
 def create_commandline_trans():
     #Create task id name form sequence number and qp value
     COMMAND_LINE_TEMPLATE = "../../%s/HEVC.out"
@@ -280,11 +264,6 @@ def create_argline_psnr_org(s,qp):
     ARGLINE_TEMPLATE = "-i1 %s -i2 %s -dx %d -dy %d"
     return ARGLINE_TEMPLATE%(create_yuv_filename(s),create_bitstream_filename(s,qp),s2resolution[s][0],s2resolution[s][1])
 
-def create_argline_psnr_trans(s,qp):
-    #Create task id name form sequence number and qp value
-    ARGLINE_TEMPLATE = "-i1 %s -i2 %s -dx %d -dy %d"
-    return ARGLINE_TEMPLATE%(create_yuv_filename(s),create_output_bitstream_filename(s,qp),s2resolution[s][0],s2resolution[s][1])
-
 #===============================================================================
 
 def prepare_paths_or_del(remove_or_create):
@@ -295,7 +274,7 @@ def prepare_paths_or_del(remove_or_create):
     #global LOG_PATH_TRANS
     #global RUN_PATH
 
-    if (GEN_TRANSCODE|GEN_ALL_CFG|remove_or_create):
+    if (GEN_TRANSCODE|GEN_PSNR|GEN_ALL_CFG|remove_or_create):
 
         ensure_path_or_del(remove_or_create, PATH+"/"+BIT_PATH)
         ensure_path_or_del(remove_or_create, PATH+"/"+CFG_PATH_TRANS)
@@ -303,10 +282,6 @@ def prepare_paths_or_del(remove_or_create):
         ensure_path_or_del(remove_or_create, PATH+"/"+RUN_PATH)
 
         ensure_path_or_del_computer_num(remove_or_create, PATH+"/", TASK_PATH_TRANS)
-
-    if (GEN_PSNR|remove_or_create):
-        
-        ensure_path_or_del_computer_num(remove_or_create, PATH+"/", TASK_PATH_PSNR)
 
     return
 #===============================================================================
@@ -428,11 +403,8 @@ for s in s2do: #Loop over every sequence to do
 
 #        psnr
         task_id_name_psnr = create_task_id_name_psnr(s,qp)
-        task_id_name_psnr_trans = create_task_id_name_psnr_trans(s,qp)
         if (GEN_PSNR):
             ensure_path(PATH+"/"+RUN_PATH+"/"+task_id_name_psnr)
-            os.chdir(PATH+"/"+RUN_PATH+"/"+task_id_name_psnr)
-            ensure_path(PATH+"/"+RUN_PATH+"/"+task_id_name_psnr_trans)
             os.chdir(PATH+"/"+RUN_PATH+"/"+task_id_name_psnr)
 
         log_filename_trans = create_log_filename_trans(s,qp)
@@ -440,25 +412,16 @@ for s in s2do: #Loop over every sequence to do
 
         log_filename_psnr_org   = create_log_filename_psnr_org(s,qp)
         err_filename_psnr_org   = create_err_filename_psnr_org(s,qp)
-        log_filename_psnr_trans = create_log_filename_psnr_trans(s,qp)
-        err_filename_psnr_trans = create_err_filename_psnr_trans(s,qp)
 
         commandline        = create_commandline_trans()
         argline            = create_argline_trans(s,qp)
         commandline_psnr   = create_commandline_psnr()
         argline_psnr_org   = create_argline_psnr_org(s,qp)
-        argline_psnr_trans = create_argline_psnr_trans(s,qp)
 
         os.chdir(PATH+"/"+RUN_PATH+"/")
         if (GEN_PSNR):
             new_task_filename = create_task_filename_psnr(task_idcn,task_id_name_psnr)
             generate_task_v2(GEN_SCRIPT_TYPES, new_task_filename, RUN_PATH+"/"+task_id_name_psnr, [commandline_psnr,argline_psnr_org], [log_filename_psnr_org,err_filename_psnr_org], MB_thread_usage_trans[s2class[s]], USER, sys.argv[0], EMAIL_ENABLE, EMAIL_RECIPIENTS, FINAL_COMMENTS_TRANS, last_task_filename)
-            last_task_filename = new_task_filename
-
-        os.chdir(PATH+"/"+RUN_PATH+"/")
-        if (GEN_PSNR):
-            new_task_filename = create_task_filename_psnr(task_idcn,task_id_name_psnr_trans)
-            generate_task_v2(GEN_SCRIPT_TYPES, new_task_filename, RUN_PATH+"/"+task_id_name_psnr, [commandline_psnr,argline_psnr_trans], [log_filename_psnr_trans,err_filename_psnr_trans], MB_thread_usage_trans[s2class[s]], USER, sys.argv[0], EMAIL_ENABLE, EMAIL_RECIPIENTS, FINAL_COMMENTS_TRANS, last_task_filename)
             last_task_filename = new_task_filename
 
         os.chdir(PATH+"/"+RUN_PATH+"/")
