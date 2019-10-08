@@ -30,7 +30,9 @@
     <Compile Include="!script\task_generation_v2.py" />
     <Compile Include="GenerateTasksHEVC.py" />
 	<Compile Include="GenerateTasksHEVC_psnr.py" />
+	<Compile Include="GenerateTasksHEVC_psnr_2.py" />
 	<Compile Include="GenerateTasksHEVC_trans.py" />
+	<Compile Include="GenerateTasksHEVC_trans_2.py" />
     <Compile Include="GenerateTasksHEVC_org.py" />
 	<Compile Include="GenerateTasksHEVC_rewriter.py" />
     <Compile Include="SummaryToExcel_TG_kbps.py" />
